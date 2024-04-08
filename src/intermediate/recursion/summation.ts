@@ -9,10 +9,10 @@
 // simpleSummation(100) --> 5050
 // simpleSummation(54) --> 1485
 
-function simpleSummation(n: number): number {
-  if(n === 0) return 0;
-  return simpleSummation(n - 1) + n;
-};
+// function simpleSummation(n: number): number {
+//   if(n === 0) return 0;
+//   return simpleSummation(n - 1) + n;
+// };
 
 // 二乗の総和
 // 自然数 n が与えられるので、1^2 + 2^2 + 3^2 + ... + n^2 を計算する squareSummation という関数を再帰を使って作成してください。
