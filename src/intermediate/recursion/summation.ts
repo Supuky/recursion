@@ -33,3 +33,20 @@ function squareSummation(n:number): number{
   return squareSummation(n - 1) + Math.pow(n, 2);
 }
 
+// 総和(末尾再帰)
+function simpleSummationTail(n: number){
+  return simpleSummationTailHelper(n, 0);
+}
+
+// 補助関数
+function simpleSummationTailHelper(count: number, total: number){
+  // ベースケースに達したら、計算結果を返します
+  if(count <= 0 ) {
+      return total;
+  }
+
+  // total + count として、計算結果を足していきます
+  return simpleSummationTailHelper(count-1, total+count);
+}
+
+console.log(simpleSummationTail(5));
