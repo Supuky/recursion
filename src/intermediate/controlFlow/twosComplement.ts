@@ -38,13 +38,13 @@ function twosComplement(bits:string): string{
 }
 
 function oneComplement(bits:string): string{
-let output = "";
-for(let i = 0; i < bits.length; i++) {
-    if(bits[i] === "0") output += "1";
-    else output += "0";
-}
+    let output = "";
+    for(let i = 0; i < bits.length; i++) {
+        if(bits[i] === "0") output += "1";
+        else output += "0";
+    }
 
-return output;
+    return output;
 }
 
 
