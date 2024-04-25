@@ -1,0 +1,84 @@
+ハッシュテーブル（hash table）とは、キーと配列のインデックスを関連付けるために使われるデータ構造です。この関連付けは、ハッシュ関数を使って行われます。ハッシュ関数は、キーを入力とし、ハッシュ値という整数を出力します。このハッシュ値を配列のインデックスとして使用することで、ハッシュテーブルから素早く値を取り出すことができます。
+
+ハッシュマップを使って、値 x をキーと値のペア [x:x] としてマップすると、x を検索するといつでも x が返され、O(1) でアクセスすることが可能になります。例えば、配列[2,12,5,8,9] が与えられたとき、ハッシュマップは以下のようになります。
+
+hashmap = {
+    "2" : 2,
+    "12" : 12,
+    "5" : 5,
+    "8" : 8,
+    "9" : 9,
+}
+
+このとき、hashmap["8"] や hashmap["12"] のようなアクセスは O(1) でできるため、一度ハッシュマップに格納さえすれば、毎回配列を O(n) で 1 つ 1 つ探索しなくても要素が存在するか確認することができます。
+
+
+しかし、n 個のリストからハッシュマップの作成には空間計算量が O(n) になってしまう点には注意が必要です。それでは、ハッシュマップキャッシングを使った検索アルゴリズムの実装を見てみましょう。
+
+function existsWithinList(listL, dataY){
+    let hashMap = {};
+
+    // ハッシュマップに格納
+    for(let i = 0; i < listL.length; i++){
+        hashMap[listL[i]] = listL[i];
+    }
+
+    // キーが存在しない場合は undefined が返されます。
+    // !== は === に似たもので、値と型の両方をチェックします。null == undefined は true を返し、null === undefined は false を返します
+    return hashMap[dataY] !== undefined ? true : false;
+}
+
+// リストを検索します
+let sampleList = [3,10,23,3,4,50,2,3,4,18,6,1,-2];
+console.log(existsWithinList(sampleList,23));
+console.log(existsWithinList(sampleList,-2));
+console.log(existsWithinList(sampleList,100));
+
+
+function listIntersection(targetList, searchList){
+    let hashmap = {};
+    let results = [];
+
+    // L1 の要素をキャッシュ
+    for(let i = 0; i < targetList.length; i++){
+        hashmap[targetList[i]] = targetList[i];
+    }
+
+    // L2 のそれぞれの要素をチェック
+    for(let i=0; i < searchList.length; i++){
+        // O(1) でチェック可能
+        if(hashmap[searchList[i]] !== undefined) results.push(searchList[i]);
+    }
+
+    return results;
+}
+
+console.log(listIntersection([1,2,3,4,5,6],[1,4,4,5,8,9,10,11]));
+console.log(listIntersection([3,4,5,10,2,20,4,5],[4,20,22,2,2,2,10,1,4]));
+console.log(listIntersection([2,3,4,54,10,5,9,11],[3,10,23,10,0,5,9,2]));
+
+
+function printDuplicates(inputList){
+    let hashmap = {};
+
+    for(let i = 0; i < inputList.length; i++){
+        // ハッシュマップ内に値が存在しない時、1 を設定
+        if(hashmap[inputList[i]] === undefined) hashmap[inputList[i]] = 1;
+        // ハッシュマップ内に値が存在する時、+ 1
+        else hashmap[inputList[i]] = hashmap[inputList[i]] + 1;
+    }
+
+    // Object　ライブラリを使ってすべてのキーを出力します
+    // Object.values(hashmap) メソッドを使ってハッシュマップの全ての値を出力することもできます
+    // ハッシュマップキーは順序のないリストであるため、キャッシュされた順に出力されるわけではない点に注意しましょう
+    let keys = Object.keys(hashmap);
+    console.log(keys);
+
+    // キャッシュされた情報を出力します
+    for(let i = 0; i < keys.length; i++) {
+        console.log(keys[i] + " has " + hashmap[keys[i]] + " duplicates.");
+    }
+}
+
+printDuplicates([1,1,1,1,1,2,2,2,2,2,2,3,3,3,4,5,6,6,6,6,7,8,8,8,9,9,9]);
+printDuplicates([7,7,6,6,3,5,3,9,2,5,5,4,6,4,1,4,1,7,2]);

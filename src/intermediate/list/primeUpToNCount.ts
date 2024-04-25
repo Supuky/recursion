@@ -18,21 +18,41 @@
 // primesUpToNCount(3406) --> 478
 // primesUpToNCount(20034) --> 2266
 
+// function primesUpToNCount(n: number) {
+//   let primes = [];
+//   for(let i = 0; i < n; i++) primes[i] = true;
+
+//   // 0と1を除去するため予め count には2を入れておきます。
+//   let count = 2;
+
+//   for(let i = 2; i * i < n; i++){
+//     let p = 2;
+//     while(i*p < n){
+//       // 約数を持っている数をカウントします。
+//       if (primes[i*p]) count++;
+//       primes[i*p] = false;
+//       p++;
+//     }
+//   }
+
+//   return primes.length - count;
+// }
+
 function primesUpToNCount(n: number) {
   let primes = [];
   for(let i = 0; i < n; i++) primes[i] = true;
 
-  // 0と1を除去するため予め count には2を入れておきます。
   let count = 2;
 
   for(let i = 2; i * i < n; i++){
+    if (primes[i]) {
       let p = 2;
       while(i*p < n){
-          // 約数を持っている数をカウントします。
-          if (primes[i*p]) count++;
-          primes[i*p] = false;
-          p++;
+        if (primes[i*p]) count++;
+        primes[i*p] = false;
+        p++;
       }
+    }
   }
 
   return primes.length - count;
