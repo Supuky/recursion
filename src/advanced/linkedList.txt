@@ -1,0 +1,624 @@
+連結リスト（linked list）は、データがメモリ上の連続したブロックに格納されないデータ構造です。その代わり、データはポインタによって接続された一連のシーケンスで構成されています。これは、データが連続したメモリに格納される配列とは対照的になります。
+
+つまり、連結リスト内では、4 バイトのある要素がアドレス 0xAB144CDC に格納され、次のデータがアドレス 0x5E459C12 に格納されることもあるということです。データが連続したメモリに格納される配列では、4 バイトのデータがアドレス 0xD3AE72 から始まる場合、メモリに格納される次の int 型のデータはアドレス 0xD3AE76 に格納されます。
+
+連結リストでは、各要素はノード（node）と呼ばれます。各ノードには、データ要素と次のノードへの参照が格納されます。この参照によって、あるノードから次のノードにアクセスすることができます。ノードは一列に連なっており、次のノードへの参照をたどることで、リスト全体をたどることができます。つまり、あるノードから次のノードへ移動するためには、次のノードへの参照を使います。これにより、データ要素を順番にたどりながら、リスト全体を走査することができます。
+
+片方向リスト
+片方向リスト（singly-linked list）は、連結リストの中でも最も基本的な形態の一つです。各ノードはデータを格納する変数（data）と、次のノードを指すポインタ変数（next）から構成されています。次のノードを指すポインタは、リストの最後尾に達した場合には null 値を格納するか、空のリストを指すこともあります。
+
+重要な点として、ノードにおける next 変数には参照（メモリアドレス）が格納されていることに留意する必要があります。実際に格納されるのは次のノードオブジェクトの参照であり、これを通じて次のノードにアクセスすることができるため、ポインタ（pointer）と呼ばれています。
+
+Note: ポインタ
+ポインタは、他の変数のメモリアドレスを格納する変数です。ポインタは、連結リストや木のような動的データ構造の実装によく使われ、また、特定のアルゴリズムの性能向上にも利用されることがあります。しかし、ポインタはメモリを慎重に管理する必要があるため、扱いがやや難しい場合があります。
+
+連結リストにおいて、最初のノードは先頭（head）と呼ばれ、リストの最後のノードは末尾（tail）と呼ばれます。先頭ノードを表す変数や参照が通常使用され、この変数を使用してリストの要素にアクセスします。
+
+リストの最後のノードは通常、次のノードへの参照を持たず、null（または nil）という値が next に割り当てられます。これにより、リストの終了が示されます。null を持つノードを末尾ノードとして特定し、リストの末尾を判断することができます。
+
+class Node{
+    constructor(data){
+        this.next = null;
+        this.data = data;
+    }
+}
+
+// 片方向リスト
+class SinglyLinkedList{
+    constructor(node){
+        // 先頭を定義します。
+        this.head = node;
+    }
+}
+
+// 3つのノードを作成します。
+let node1 = new Node(4);
+let node2 = new Node(65);
+let node3 = new Node(24);
+
+let numList = new SinglyLinkedList(node1);
+
+// リストに他のリストを追加します。
+// nodeはオブジェクトなので、=は値ではなく、メモリアドレスを指している点に注意してください。
+numList.head.next = node2;
+numList.head.next.next = node3;
+
+// 連結リストを反復します。
+// 反復によって、現在のノードは次のノードになります。この処理を最後のノードまで繰り返します。
+let currentNode = numList.head;
+while(currentNode){
+    // 現在のノードを出力します。
+    console.log(currentNode.data);
+    currentNode = currentNode.next;
+}
+// while(currentNode !== null){
+//     // 現在のノードを出力します。
+//     console.log(currentNode.data);
+//     currentNode = currentNode.next;
+// }
+
+ご覧のように、片方向リストはポインタで構成された非常に単純なデータ構造です。
+
+片方向リスト - インデックス
+片方向リストで使える操作（挿入、削除、インデックス操作）について見てみましょう。ここでは連結リストのプラス面とマイナス面について説明します。ではまずはインデックス操作からみてみましょう。
+
+
+連結リストは、要素がメモリ上で非連続的に配置されているため、要素にアクセスするためにはポインタをたどる必要があります。そのため、連結リストのインデックス操作は、i 番目の要素に到達するために、i-1 番目までの全ての要素を辿る必要があります。この操作は、最悪の場合、リストの長さに比例して O(n) の時間がかかります。
+
+一方、配列では、データが連続的に格納されているため、インデックス演算は O(1) の時間計算量で実行できます。配列では、指定したインデックスに直接アクセスすることができます。
+
+したがって、連結リストのインデックス操作は配列のインデックス操作よりも効率が悪いと言えます。
+
+では片方向リストを巡回する処理を見てみましょう。リストのデータ構造に at 関数を追加して、インデックス i を受け取り、i+1 番目のノードを返します。見つからなければ、null を返します。
+
+class Node{
+    constructor(data){
+        this.next = null;
+        this.data = data;
+    }
+}
+
+class SinglyLinkedList{
+    // 配列が渡されるようにします。片方向リストの初期化を行います。
+    constructor(arr){
+        // 連結リストは先頭が必要です。もし配列に要素が存在しなれば、nullを初期値とします。
+        this.head = arr.length > 0 ? new Node(arr[0]) : new Node(null);
+
+        // =はメモリアドレスを指すので注意してください。
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i]);
+            currentNode = currentNode.next;
+        }
+    }
+
+    at(index){
+        let iterator = this.head;
+        // 与えられたインデックスまでリストの中を反復します。
+        // nullになったところは反復の範囲外になります。
+        for(let i = 0; i < index; i++){
+            // もしnextがnullの場合、nullを返します。これはインデックスが範囲外にあることを示します。
+            iterator = iterator.next;
+            if(iterator == null) return null;
+        }
+        return iterator;
+    }
+}
+
+let numList = new SinglyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+
+// 連結リストを反復します。
+console.log(numList.at(2).data);
+console.log(numList.at(12).data);
+
+//console.log(numList.at(13).data); // a(13)はnullを返すので、エラーになります。
+
+では、連結リストの中からあるデータを含むノードを検索する処理を O(n) で実装してみましょう。キーを受け取り、そのキーに合致するデータを持つ最初のノードを返す findNode を実装してください。
+
+class Node{
+    constructor(data){
+        this.next = null;
+        this.data = data;
+    }
+}
+
+class SinglyLinkedList{
+    constructor(arr){
+        this.head = arr.length > 0 ? new Node(arr[0]) : new Node(null);
+
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i]);
+            currentNode = currentNode.next;
+        }
+    }
+
+    // ここからat関数とfindNode関数を作成してください。
+    at(index) {
+        let iterator = this.head
+
+        for(let i = 0; i < index; i++) {
+            iterator = iterator.next
+            if(iterator === null) return null
+        }
+
+        return iterator
+    }
+
+    findNode(key) {
+        let iterator = this.head
+        let count = 0
+
+        while(iterator !== null) {
+            if(iterator.data == key) return count
+            iterator = iterator.next
+            count++
+        }
+        return null
+    }
+
+}
+
+let numList = new SinglyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+
+// データを出力してください。
+console.log(numList.at(2).data);
+console.log(numList.at(5).data);
+console.log(numList.findNode(67));
+console.log(numList.findNode(767));
+
+片方向リスト - 挿入
+配列はそのサイズが固定で、サイズを変更するには新しい、より大きな配列を作成する必要がありました。一方、連結リストは各ノードが次のノードへの参照（通常はポインタ）を持つシンプルなデータ構造を利用しており、これによりリストのサイズを容易に調整することが可能になります。
+
+
+連結リストの特性を活用すれば、既知のノードの直後に新しい要素を挿入することは O(1) の時間計算量で可能です。例えば、「A」というノードの直後に新しいノード「B」を追加するとき、以下のような手順で進めます。
+
+まず「A」の次のノードへの参照を、一時的に別の場所に保存します。この保存した参照を「T」と呼びます。
+次に「A」の次のノードへの参照を「B」に変えます。
+最後に「B」の次の項目へのノードを、「T」に保存しておいた元々の「A」の次のノードに変えます。
+これらの手順により、「B」は「A」の直後に追加されることになります。
+
+class Node{
+    constructor(data){
+        this.next = null;
+        this.data = data;
+    }
+}
+
+class SinglyLinkedList{
+    constructor(arr){
+        this.head = arr.length > 0 ? new Node(arr[0]) : new Node(null);
+
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i])
+            currentNode = currentNode.next
+        }
+    }
+
+    at(index){
+        let iterator = this.head;
+        for(let i = 0; i < index; i++){
+            iterator = iterator.next;
+            if(iterator == null) return null;
+        }
+
+        return iterator;
+    }
+
+    // ノードのデータを出力します。
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }
+        console.log(str);
+    }
+}
+
+let numList = new SinglyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+
+// console.log(numList.at(2).data);
+// console.log(numList.at(3).data);
+// console.log(numList.at(4).data);
+
+// numList.printList();
+
+console.log(numList.at(2))
+// インデックス2と3の間に40という値を挿入します。
+let thirdEle = numList.at(2);
+let tempNode = thirdEle.next;
+let newNode = new Node(40);
+thirdEle.next = newNode;
+newNode.next = tempNode;
+
+console.log(numList.at(2).data);
+console.log(numList.at(3).data);
+console.log(numList.at(4).data);
+numList.printList();
+ある特定の位置に要素を挿入するには、O(n) でその位置を見つけ出してから挿入処理を行わなればいけない点は考慮しなければいけません。しかし、すでにリストの特定のノードの位置まで辿っている場合は、O(1) で挿入することができるということを覚えておいてください。
+
+では、リストのインデックスが偶数番目の要素を 2 倍にし、それぞれの要素の後ろに追加する処理を見てみます。
+
+class Node{
+    constructor(data){
+        this.next = null;
+        this.data = data;
+    }
+
+    // 新しいノードを受けとって、次のノードに設定する
+    addNextNode(newNode){
+        let tempNode = this.next;
+        this.next = newNode;
+        newNode.next = tempNode;
+    }
+}
+
+class SinglyLinkedList{
+    constructor(arr){
+        this.head = arr.length > 0 ? new Node(arr[0]) : new Node(null);
+
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i])
+            currentNode = currentNode.next
+        }
+    }
+
+    at(index){
+        let iterator = this.head;
+        for(let i = 0; i < index; i++){
+            iterator = iterator.next
+            if(iterator == null) return null;
+        }
+
+        return iterator
+    }
+
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }
+        console.log(str)
+    }
+}
+
+let numList = new SinglyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+numList.printList();
+
+let iterator = numList.head;
+let i = 0;
+while(iterator != null){
+    let currentNode = iterator;
+    iterator = iterator.next;
+    if(i%2 == 0) currentNode.addNextNode(new Node(currentNode.data*2));
+    i++;
+}
+
+numList.printList();
+
+リストの先頭と末尾への挿入は、先頭と末尾が追跡されていれば、常に O(1) で実行することができます。
+
+先頭へ挿入
+連結リストの先頭にノードを追加する preappend と呼ばれるメソッドを作成してみましょう。
+
+class Node{
+    constructor(data){
+        this.next = null;
+        this.data = data;
+    }
+
+    addNextNode(newNode){
+        let tempNode = this.next;
+        this.next = newNode;
+        newNode.next = tempNode;
+    }
+}
+
+class SinglyLinkedList{
+    constructor(arr){
+        this.head = arr.length > 0 ? new Node(arr[0]) : new Node(null);
+
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i])
+            currentNode = currentNode.next
+        }
+    }
+
+    at(index){
+        let iterator = this.head;
+        for(let i = 0; i < index; i++){
+            iterator = iterator.next
+            if(iterator == null) return null;
+        }
+
+        return iterator
+    }
+
+    // 先頭に受け取ったノードを追加します。
+    preappend(newNode){
+        newNode.next = this.head;
+        this.head = newNode;
+    }
+
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }
+        console.log(str)
+    }
+}
+
+let numList = new SinglyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+
+numList.printList();
+numList.preappend(new Node(45));
+numList.preappend(new Node(236));
+numList.printList();
+
+末尾へ挿入
+リストの最後に要素を追加するためには、片方向リストを辿ることによって O(n) で末尾を見つけることができます。もし、片方向リストの末尾が追跡されている場合は、preappend と同様に O(1) で append 関数を適用することができます。
+
+class Node{
+    constructor(data){
+        this.next = null;
+        this.data = data;
+    }
+
+    addNextNode(newNode){
+        let tempNode = this.next;
+        this.next = newNode;
+        newNode.next = tempNode;
+    }
+}
+
+class SinglyLinkedList{
+    constructor(arr){
+        this.head = arr.length > 0 ? new Node(arr[0]) : new Node(null);
+
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i])
+            currentNode = currentNode.next
+        }
+    }
+
+    at(index){
+        let iterator = this.head;
+        for(let i = 0; i < index; i++){
+            iterator = iterator.next
+            if(iterator == null) return null;
+        }
+
+        return iterator
+    }
+
+    preappend(newNode) {
+        newNode.next = this.head;
+        this.head = newNode;
+    }
+
+    // ここから開発しましょう。
+    append(newNode) {
+        let iterator = this.head
+        while(iterator.next != null) {
+            iterator = iterator.next
+        }
+        iterator.next = newNode
+    }
+
+
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }
+        console.log(str)
+    }
+}
+
+let numList = new SinglyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+
+numList.printList();
+
+// append関数を使って要素を末尾に追加してください。
+numList.append(new Node(8))
+numList.printList()
+
+片方向リスト - 削除
+片方向リストは、各ノードが次のノードへの参照を持つ構造です。そのため、リスト内を逆方向に移動するための直接的な機能がないため、特定のノードを削除する場合にはリスト上で線形探索を行う必要があります。
+
+先頭のノードを削除する場合、そのノードの次のノードを新たな先頭として割り当てることで O(1) の時間で削除できます。しかし、特定のノードを削除する場合には、そのノードがリスト上でどこに位置するかを見つける必要があります。これには、先頭から順にノードを調べる線形探索が必要です。
+
+
+したがって、特定のノードを削除する操作は、ノードが見つかるまでリストを順に探索する必要があります。この操作は O(n) の時間計算量がかかります。
+
+class Node{
+    constructor(data){
+        this.next = null;
+        this.data = data;
+    }
+
+    addNextNode(newNode){
+        let tempNode = this.next;
+        this.next = newNode;
+        newNode.next = tempNode;
+    }
+}
+
+class SinglyLinkedList{
+    constructor(arr){
+        this.head = arr.length > 0 ? new Node(arr[0]) : new Node(null);
+
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i])
+            currentNode = currentNode.next;
+        }
+    }
+
+    at(index){
+        let iterator = this.head;
+        for(let i = 0; i < index; i++){
+            iterator = iterator.next;
+            if(iterator == null) return null;
+        }
+
+        return iterator;
+    }
+
+    preappend(newNode){
+        newNode.next = this.head;
+        this.head = newNode;
+    }
+
+    // リストの先頭の要素をポップします。O(1)
+    popFront(){
+        this.head = this.head.next;
+    }
+
+    delete(index){
+        if(index == 0) return this.popFront();
+
+        let iterator = this.head;
+        // 目的のデータの手前のインデックスまで、リストの中を反復します。
+        for(let i = 0; i < index-1; i++){
+            // もし、次のノードがなかった場合、nullを返します。インデックス範囲外を意味します。
+            if(iterator.next == null) return null;
+            iterator = iterator.next;
+        }
+        // iterator（削除したい要素の1つ前）, 削除したい要素(A), その次の要素(B)
+        // iteratorのポインタをAではなくBに変更します。
+        iterator.next = iterator.next.next;
+    }
+
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }
+        console.log(str);
+    }
+}
+
+let numList = new SinglyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+
+numList.printList();
+
+numList.popFront();
+numList.popFront();
+numList.printList();
+
+numList.delete(4);
+numList.printList();
+
+numList.delete(9);
+numList.printList();
+
+連結リストの逆表示（中上級者向け）
+
+では、片方向リストを O(n) で逆向き表示にする実装にチャレンジしてみましょう。削除と反復を逆に行う処理を行うために、前のノードを追跡するための別のポインタを割り当てましょう。
+
+class Node{
+    constructor(data){
+        this.next = null;
+        this.data = data;
+    }
+
+    addNextNode(newNode){
+        let tempNode = this.next;
+        this.next = newNode;
+        newNode.next = tempNode;
+    }
+}
+
+class SinglyLinkedList{
+    constructor(arr){
+        this.head = arr.length > 0 ? new Node(arr[0]) : new Node(null);
+
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i])
+            currentNode = currentNode.next
+        }
+    }
+
+    at(index){
+        let iterator = this.head;
+        for(let i = 0; i < index; i++){
+            iterator = iterator.next
+            if(iterator == null) return null;
+        }
+
+        return iterator
+    }
+
+    preappend(newNode){
+        newNode.next = this.head;
+        this.head = newNode;
+    }
+
+    popFront(self){
+        this.head = this.head.next;
+    }
+
+    delete(index){
+        if(index == 0) return self.popFront();
+
+        let iterator = this.head;
+        for(let i = 0; i < index-1; i++){
+            if(iterator.next == null) return null;
+            iterator = iterator.next
+        }
+        iterator.next = iterator.next.next
+    }
+
+    reverse(){
+        if(this.head === null || this.head.next === null) return;
+
+        // オブジェクトなので、=は実際の値を格納しているわけではなく、メモリアドレスを指している点に十分注意ください。
+        // A -> B -> C を、C -> B -> Aに変更する場合は、向きに少し混乱するのでゆっくり解読しましょう。
+        let reverse = this.head;
+        this.head = this.head.next
+        reverse.next = null;
+
+        while(this.head !== null){
+            // =はメモリアドレスを指します。紙に書いてロジックを確認しましょう。
+            let temp = this.head;
+            this.head = this.head.next;
+            temp.next = reverse;
+            reverse = temp;
+        }
+        // 処理が終わったら、headのnextを反転したリストを含むtempHeadに割り当てましょう。
+        this.head = reverse;
+    }
+
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }
+        console.log(str)
+    }
+}
+
+let numList = new SinglyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+
+numList.printList();
+numList.reverse();
+numList.printList();
