@@ -1,0 +1,1513 @@
+木構造
+グラフは、コンピュータの計算や解析の重要な道具です。これは、物事の関係性を視覚的に表現するのにとても役立ちます。例えば、人々の友人関係やウェブサイト間のリンク、都市間の交通ネットワークなど、生活の中で様々な場面で使われています。
+
+グラフは、物事（これを要素と呼びます）の間の関係を捉えるために使われます。それぞれの要素は一意に区別され、それぞれが何かしらの値を持っていて、その値は数え上げることができます。
+
+
+グラフ理論において、個々の要素は頂点またはノード、2 つの要素間の関係は辺と呼ばれ、2 つの頂点 [頂点 1、頂点 2] によって表されます。
+
+個々の要素とその関係（すべての頂点と辺）が存在する時、グラフ理論を応用することができます。
+
+
+グラフの中には、一つの頂点（街）から出発して、同じ頂点（街）に戻ってくるような辺（道路）の辿り方ができるものがあります。これを閉路と呼びます。しかし、閉路が一つもないグラフ、つまり一つの道を進んだら同じ場所に戻ってくることがないような形状を木構造（tree structure）と呼びます。これはまるで街を出発点から目的地まで一直線に進む道のりのようなものです。
+
+木構造は親と子の関係を表すのにとても役立ちます。一つの親から複数の子が分岐していくような形を想像してみてください。このような構造を学ぶことで、情報がどのようにつながっているのか理解するのに役立ちます。それぞれの親が最大 2 つの子を持つという特殊な木構造を二分木（バイナリーツリー）といいます。
+
+特に二分木という特殊なデータ構造を用いることによって、コンピュータ計算に不可欠な操作である、ソートと検索を効果的に処理することができます。
+
+
+
+グラフ
+グラフ理論におけるグラフとは、頂点と辺を持つ構造体のことを指します。
+
+グラフは主に、有向グラフ（directed graph）と無向グラフ（undirected graph）の 2 つに分類されます。有向グラフとは、頂点と向きを持つ辺（矢印）により構成されたグラフであり、無向グラフとは、頂点と辺により構成されたグラフを指します。
+グラフは頂点の集合と辺の集合の 2 つの順序対で構成されます。グラフ Gを構成する頂点の集合を V、辺の集合を E とし、G=(V,E)と表記されます。
+
+
+集合
+集合とは、要素と呼ばれる、定義されたオブジェクトの集まりのことを指します。集合は、現代数学全体における最も基本的な概念の一つです。
+
+
+集合は要素として集められる対象となる「もの」は数、文字、記号をはじめ、どんなものでも問題ありません。一方、どんな「集まり」でも集合と呼んでよいわけではありません。対象が「その集まりの元であるかどうかが不確定要素なしに一意に決定できる」ように定義されていなければいけません。
+
+Note:
+
+集合とは、要素が明確に定まる集まりのことを指します。つまり、集合内のどの要素が含まれているかがはっきりと分かる必要があります。
+
+
+例えば、「果物の集合」を考えてみましょう。この集合にはりんご、バナナ、オレンジといった要素が含まれています。これらの要素は明確に定まっており、集合内に存在します。
+
+
+一方で、「大きなものの集合」という表現では、具体的な要素がはっきりしていません。何が含まれるのかが明確に定まっていないため、これは集合とは呼べません。
+
+オブジェクト x が集合 S の要素である場合、x∈S と表記されます。これは「x は S に属している」「x は S の要素である」と読まれます。
+
+例えば、S={1,2,3} を考えてみましょう。x=3 ならば、x∈S が成り立ちます。ただし、x=5 の場合は、x∉S、または「x は S の要素ではない」となります。
+
+
+一般的な集合には次のようなものがあります。
+
+560 ∈ ℕ
+
+ℕ（自然数集合）： ℕ = {1,2,3,4,5,...}
+
+
+-343 ∈ ℤ
+
+ℤ（整数集合）： ℤ = {...-3,-2,-1,0,1,2,3,...}
+
+
+23/55 ∈ ℚ
+
+ℚ（有理数集合）： ℚ = {a/b | a,b∈ℤ, b≠0}
+
+
+6.343434 ∈ ℝ
+
+ℝ（実数集合）： ℝ = {x | -∞ < x <∞}
+
+
+空集合 {} は記号 Ø で定義されます。
+
+有向グラフと無向グラフ
+今、グラフ G を構成する頂点の集合を V、辺の集合を E とし、G=(V,E) と表記していました。
+
+
+頂点を u  v で表すことが多いので、頂点 u,v を結ぶ辺を {u,v} としましょう。u と v は頂点なので、集合 V に属し、u,v∈V となります。
+
+
+グラフは基本的には有向グラフと無向グラフの 2 つに分けられました。有向グラフは、頂点と矢印で示される向きを持つ辺で構成されています。一方、無向グラフは頂点と辺で構成されています。有向グラフでは辺は有向辺と呼ばれ、無向グラフでは辺は無向辺と呼ばれます。2 つの頂点が辺で結ばれている場合、それらの頂点は隣接していると言います。
+
+
+では、いつかのグラフを見てみましょう。
+
+(a) 有向グラフ G = (V,E) で、V = {1,2,3,4,5,6}、E = {(1,2),(2,4),(4,2),(4,4),(4,1),(4,3),(3,1),(6,5)}。(4,4) は自己ループ。
+
+(b) 無向グラフ G = (V,E) で、V = {1,2,3,4,5,6}、E = {(1,2),(1,4),(2,4),(5,6)}。頂点 3 が孤立している。
+
+(c) a の部分グラフ。V = {1,4,5,6}
+
+有向グラフは、自分自身に向かう矢印（自己ループ）を持つことができます。しかし、無向グラフでは、同じ点から同じ点への線（自己ループ）を持つことはできません。これは無向グラフには「ある点 u と別の点 v は異なる」というルールがあるからです。
+
+グラフの中で一つの頂点（ここでは v0 とします）から別の頂点（vk とします）への経路は、頂点の並びとして考えることができます。つまり、v0 から v1、v1 から v2、...、そして最終的に vk−1 から vkへと移動します。この移動の順番が経路です。経路内で同じ頂点が二度以上現れない場合、その経路は「シンプルな経路」とみなされます。
+
+
+長さ k の経路の中で、v0=vk ならば、この経路は閉路を形成します。グラフが閉路を含む場合、それは環状グラフと呼ばれ、閉路を含まない場合は非環状グラフと呼ばれます。
+
+頂点から経路を辿って、他の全ての頂点に到達できる場合、グラフは連結されていると表現されます。
+
+
+木と森
+グラフ内に特定の構造が形成されることがあります。これらの構造の中で最も重要なものの一つに木（tree）があります。木は非環状無向グラフです。ツリーは非周期的であるため、すべての辺は一度だけ連結されます。つまり、一つの点からスタートして同じ点に戻ることなく全ての点をたどれる形状を持ちます。
+
+
+また、閉路を持たない（連結であるとは限らない）グラフを森（forest）と呼びます。つまり、無向グラフが非周期的で、どこかの点で切断されているならば、それは森と呼ばれ、連結した森は木となります。
+
+また、木では、常に E=V−1 が成り立っています。つまり、辺の数よりも常に 1 つ多くの頂点が存在することを意味します。それではグラフを見て確認してみましょう。
+
+根
+あるノードを選んで、それを一番「上」にあると考えると、そのノードを基準として 2 つのノードに上下の関係を考えることができます。このとき、その一番上の区別されたノードを根ノード（root node）といいます。そして、このように特定のノードを一番上、つまり「根」として持つ木構造を根付き木と言います。これは、通常の木構造とは異なり、始点となるノードが明確に定められているためです。
+
+
+根ノードは木構造の始まりを意味します。では、実際に具体例を見てみましょう。下の図は、7 つのノードと 6 つの辺からなる根付き木です。
+
+先祖と子孫
+2 つのノード A と B について考えてみましょう。根からノード B に至るまでの経路（道のり）上にノード A が存在する場合、ノード A をノード B の先祖 、逆にノード B をノード A の子孫と呼びます。
+
+
+同様に、「1 → 2 → 3」のパスで考えると、ノード 1 の子孫はノード 1 自身とそれより下のノード（2 と 3）、ノード 2 の子孫はノード 2 自身とそれより下のノード（3）、ノード 3 の子孫はノード 3 自身となります。
+
+
+木の定義より、どのノードもそれ自身の祖先であり子孫であることに注意してください。ノード X がノード B の祖先であり、ノード X ≠ ノード B である場合、X は B の適切な祖先であり、B は X の適切な子孫であると言えます。
+
+部分木
+部分木（subtree）とは、その木構造の一部を切り取ったもので、その切り取った部分もまた頂点と辺で繋がれている小さな木構造になっているものを指します。例えば、ノード R を根として持つ部分木とは、ノード R と、ノード R から続いている全ての子孫を含んだ部分を指します。
+
+
+上記の例では、いくつかの部分木を見てみましょう。
+木構造は非周期的です。つまり、同じノードを 2 回以上通るようなループ（周期）は存在しません。だから、あるノード X とノード Y をつなぐ辺は、1 度だけしか存在しません。それらが 2 度以上つながっていると、それはループを作ることになり、木構造の定義に反してしまいます。
+
+親と子
+ノード A とノード B が辺で結ばれており、しかもノード A の方がノード B よりも根に近いとき、ノード A はノード B の親であると呼ばれ、ノード B はノード A の子と呼ばれます。定義により、根ノードは親を持たない、木構造内の唯一のノードである点に注意してください。
+
+兄弟
+また、ノード X とノード Y が共通の親を持つとき、ノード X とノード Y は兄弟と呼ばれます。
+
+葉
+ノードに子がない場合、それは葉ノード（leaf node）と呼ばれます。葉ノードは木構造の下位の末端にあるノードであり、1 つの木に複数存在することがあります。
+
+では、例を見てみましょう。ノード 2 の子は {3,4} で、{3,4} は親が {2} の兄弟です。この木の根ノードは、親がいない {0} で、この木の葉のノードは {1,3,5} になります。
+
+木の高さ、深さ
+最後に、木について知っておかなければならない定義を紹介します。
+
+
+高さ（height）とは、あるノードについて、そのノードからその子孫である葉ノードへの辺の数の最大値を指します。根ノードの高さはその木構造の高さになります。
+
+深さ（depth）とは、逆に、あるノードについて、そのノードから根ノードまでの辺の数のことを指します。根ノードの深さは 0 になります。階層（level）とは、深さ x のすべてのノードが存在する領域のことを指します。
+
+
+二分木
+二分木（binary tree）は、データ構造の 1 つです。根付き木構造の中で、あるノードが持つ子の数が最大で 2 であるものを指します。これらの子ノードは通常、「左の子ノード」と「右の子ノード」呼ばれます。この木にはデータが 1 つも含まれていない場合もあり、その場合は「空の木」と呼ばれます。
+
+このような二分木構造は、特にデータの探索において便利です。なぜなら、探索する時間がデータの数の対数（
+log
+n
+）になるからです。つまり、大量のデータを効率的に探索できるのです。
+
+
+具体的には、例えば二分探索木（BST：Binary Search Tree）などのように、二分木が特定の順序で構成されている場合、探索する際に次に見るべきノードが「左の子ノード」か「右の子ノード」かをそのノードの値と探す値を比較することで決定できます。つまり、それぞれの探索ステップで探索範囲が半分になるため、探索時間はデータの数（n）の対数（
+log
+n
+）になります。
+
+
+また、二分木はその自然な形状から、再帰的な問題を解くのにもよく使われます。実際、二分木の構造や操作を扱う場合、再帰を使うと最も直感的にプログラムを書くことができます。
+
+
+では、二分木構造をコードによって定義してみましょう。
+
+// BinaryTreeクラスの定義
+class BinaryTree {
+    // コンストラクタ。インスタンスが作成される時に実行されるメソッドです。
+    constructor(data) {
+        // ノードが保持するデータ
+        this.data = data;
+        // ノードの左の子。初期状態ではnullに設定
+        this.left = null;
+        // ノードの右の子。初期状態ではnullに設定
+        this.right = null;
+    }
+}
+
+// 二分木の根ノードを作成。データとして1を保持
+const binaryTree = new BinaryTree(1);
+// 新たに二つのノードを作成。データとしてそれぞれ2と3を保持
+const node2 = new BinaryTree(2);
+const node3 = new BinaryTree(3);
+
+// 根ノードの左の子としてnode2、右の子としてnode3をセット
+binaryTree.left = node2;
+binaryTree.right = node3;
+
+// 根ノードとその左右の子ノードが保持するデータを表示
+// 根ノードのデータを表示
+console.log("Root: " + binaryTree.data);
+// 左の子ノードのデータを表示
+console.log("Left: " + binaryTree.left.data);
+// 右の子ノードのデータを表示
+console.log("Right: " + binaryTree.right.data);
+
+
+二分木は、それぞれのノードが最大で　2　つの子ノードを持つことができる構造のことを指しました。これにはいくつかのバリエーションがあります。
+
+
+全二分木
+まず、全二分木（full binary tree）です。全てのノードが「葉（子を持たないノード）であるか、もしくは2つの子を持っている」二分木のことを言います。つまり、ノードは子を 2 つ持つか持たないかのどちらかで、1 つだけ子を持つようなノードは存在しないということです。
+
+完全二分木
+この中でも、全ての葉ノードが同じ「深さ」を持つ二分木は、完全二分木（perfect binary tree）と呼ばれます。これは、すべての階層が最大限までノードで満たされている二分木と言えます。
+
+しかし、完全二分木という言葉は別の意味で使われることもあります。それは、最下層を除いて全ての階層がノードで満たされ、かつ最下層の葉ノードが左側から順に詰められている二分木のことを指します。この意味での完全二分木（complete binary tree）は、可能な限りノードを詰め込んだ状態、つまり最大容量であることを意味します。
+
+完全二分木の数学的性質
+この完全二分木には特徴的な性質があります。その一つが、ノードの数と関連する数学的なパターンです。各階層（または深さ）について考えると、その階層に存在することのできるノードの最大数は 2 の l 乗となります。ここで l は階層を表します。例えば、根ノードの階層は 0 となります。
+
+つまり、完全二分木では、葉ノードの数は、2h であり、葉ノード以外の内部ノードの合計は、2h−1 になります。
+
+Note: 内部ノードの計算
+20+21+22+...+2h−1=2h−1
+Note: 等比数列の和
+
+初項を a、公比を r とすると、初項から第 n 項までの和 Sn は以下になります。
+
+
+Sn=a+ar+ar2+ar3....+arn−1=a(r^n−1)/r−1
+
+今回のケースでは、a=20=1、r=2 になります。
+
+したがって、葉ノードを含めた、高さ 
+h の二分木に含まれる最大のノード数は、20+21+22...+2h−1+2h になるので、2h+1−1 になることがわかるでしょう。
+
+
+今、階層 n には最大 2n 個の葉ノードが含まれているとわかっています。これを踏まえて、n 個の葉ノードを持つ完全二分木の高さは、log2n と計算することができます。これは、葉ノードの数を 2 で何回割れば 1 になるか、という問いと等価で、それがツリーの高さを表します。
+
+二分探索木(1)
+完全二分木の高さが 
+log2n であるという性質を利用して、O(logn) で検索できる構造を作成していきます。
+
+
+通常の探索
+では、まず探索について復習しましょう。中級の探索で、O(n) で、干し草の山の中から針を見つける実装を行ったことを思い出しましょう。
+function linearSearch(key, haystack){
+    for(let i = 0; i < haystack.length; i++){
+        if(key === haystack[i]) return i;
+    }
+    return -1;
+}
+
+let l1 = [3,4,2,5,46,23,3,55,67,24,65];
+console.log(linearSearch(5,l1));
+console.log(linearSearch(24,l1));
+
+木構造を利用した探索
+二分探索木とは、特定のルールに従った木構造のことを指します。二分探索木（ binary search tree）は、木の各ノードが「左の子孫の値 ≤ 親(x)の値 ≤ 右の子孫の値」という制約を持つ二分木のことを指します。
+
+この二分探索木は、データの探索を簡単にするためのツールです。探したい値（キー）が決まると、まずは根ノード（一番上のノード）から調査を始めます。根ノードの値とキーを比較し、もしキーが小さい場合は左側の子ノード、大きい場合は右側の子ノードへと探索を続けます。これをキーが見つかるまで繰り返し行います。
+
+
+この繰り返しは再帰的に行われます。つまり、次に調査する子ノードを新たな「根ノード」とみなし、またそのノードの値とキーを比較するという手順を続けます。これにより、高速にデータを探索することが可能となります。
+
+では、キーが与えられた場合の例を見てみましょう。
+
+二分探索木(2)
+二分探索木の問題点として、左右のバランスが取れていない点が挙げられます。
+
+
+完全な二分探索木は、高さが logn であることが保証されています。これは、二分探索の処理時間が O(logn) であることを意味しています。つまり、探索にかかる時間は木の高さに比例します。
+
+
+しかし、問題はバランスが取れていない二分探索木です。n 個のノードを持ち、高さが n-1 の二分探索木はどうでしょう？この場合、木は全くバランスが取れておらず、2 のような数値や存在しないキーを探索するときに問題が生じます。木の深さが n-1 であるため、最悪の場合の性能は O(n) となります。これは、探索にかかる時間がノードの数に比例することを意味します。
+
+これはバランスが取れていない木であっても、二分探索木の探索時間は常に木の高さ O(h) に比例します。
+
+
+平衡二分探索木
+二分探索木の探索効率が最高になるのは、木の高さが最も低いケースです。つまり、根ノードから各葉までの高さができるだけ等しくなった場合であり、このような二分探索木は、「最もバランスが取れている」状態を指し、平衡二分探索木（self-balancing binary search tree）と呼ばれます。
+
+
+バランスが取れているとは、木の各部分ができるだけ均等な高さになっている状態のことで、探索効率が最も良くなります。つまり、探すデータがどこにあっても探すのにかかる時間がほぼ一定になるということです。平衡二分探索木の計算量は O(logn) になります。
+
+
+平衡二分探索木を実装したデータ構造には、B 木、AA 木、AVL 木、赤黒木、Treap など数多く存在します。
+
+それでは、ソート済みのリストから平衡二分探索木を作る方法を説明します。リストがソートされていれば、その中央の値を根ノードにして、それより左側の値を使って左の部分木を作り、それより右側の値を使って右の部分木を作るという手順を繰り返すだけです。これを再帰的に行います。
+
+Note:
+
+今回は set 型（同じ値ではない要素のコレクション）を使います。リスト内に含まれる全ての要素が異なる値を取るので、二分探索木は一意のノードを持ち、順番通りに構築することができます。同じ値の要素が複数あるケースを扱う場合は、スタックやリスト構造を使う必要があります。
+
+以下に具体的な手順を示します。
+
+開始位置（startIndex）と終了位置（endIndex）を指定して配列を取り出します。
+その配列の中央の値を新しい二分探索木の根ノードに設定します。
+開始位置から中央の一つ前までを取り出して、それを再帰的に左の部分木を作る関数に渡します。
+中央の一つ後から終了位置までを取り出して、それを再帰的に右の部分木を作る関数に渡します。
+リストが 1 つの値だけになったら、それを新たなノードとして木に追加します。
+これによって、ソート済みのリストから平衡二分探索木を作ることができます。
+
+class BinaryTree{
+    constructor(data, left = null, right = null){
+        this.data = data;
+        // 左の二分木
+        this.left = left;
+        // 右の二分木
+        this.right = right;
+    }
+}
+
+function sortedArrayToBSTHelper(arr, start, end) {
+    if(start === end) return new BinaryTree(arr[start], null,null);
+
+    let mid = Math.floor((start+end)/2);
+
+    let left = null;
+    if(mid-1 >= start) left = sortedArrayToBSTHelper(arr, start, mid-1);
+
+    let right = null;
+    if(mid+1 <= end) right = sortedArrayToBSTHelper(arr, mid+1, end);
+
+    let root = new BinaryTree(arr[mid], left, right);
+    return root;
+}
+
+function sortedArrayToBST(nums) {
+    if(nums.length == 0) return null;
+    return sortedArrayToBSTHelper(nums, 0, nums.length-1);
+}
+
+let balancedBST = sortedArrayToBST([1,2,3,4,5,6,7,8,9,10,11]);
+console.log(balancedBST);
+
+Note: コードの解説
+
+中級で学習した分割統治法を使用します。ベースケースを設定し、ベースケースに到達するまで問題を複数の部分問題に分割して考えてみましょう。例として、[1,2,3,4,5,6,7] というリストを考えてみましょう。
+
+配列の start と end（インデックス）を追跡するため、ヘルパー関数 sortedArrToBSTHelper を用意します。start は 0、end は 6 としてスタートします。
+現在の中間の要素のインデックスは 3 なので、区間(0, 2)を左部分木とし、区間(4,6)を右部分木にします。
+先に左部分木に相当する sortedArrToBST(0,2) を呼び出します。現在の中間の要素のインデックスは 1 なので、区間 (0,0) を左部分木とし、区間 (2,2) を右部分木とします。このように start と end が同じになった時をベースケースとします。要素が 1 つになった時に新しいノードを作って再帰を終了します。要素が 1 つになったのでそれぞれ左ノードと右ノードとして返します。
+次に右部分木に相当する sortedArrToBST(4,6) を呼び出します。現在の中間の要素のインデックスは 5 なので、区間 (4,4) を左部分木とし、区間 (6,6) を右部分木とします。ここでも要素が 1 つになったのでそれぞれ左ノードと右ノードとして返します。
+最後に配列の中心を根ノードとして、左右の部分木を合わせて新しいノードにします。
+分割統治法の問題を解いて練習してみましょう。
+https://recursionist.io/dashboard/problems/495
+
+平衡二分探索木の実装ができたので、リスト内のすべての検索は O(logn) になります。
+
+class BinaryTree{
+    constructor(data, left = null, right = null){
+        this.data = data;
+        // 左の二分木
+        this.left = left;
+        // 右の二分木
+        this.right = right;
+    }
+}
+
+function sortedArrayToBSTHelper(arr, start, end) {
+    if(start === end) return new BinaryTree(arr[start], null,null);
+
+    let mid = Math.floor((start+end)/2);
+
+    let left = null;
+    if(mid-1 >= start) left = sortedArrayToBSTHelper(arr, start, mid-1);
+
+    let right = null;
+    if(mid+1 <= end) right = sortedArrayToBSTHelper(arr, mid+1, end);
+
+    let root = new BinaryTree(arr[mid], left, right);
+    return root;
+}
+
+function sortedArrayToBST(nums) {
+    if(nums.length == 0) return null;
+    return sortedArrayToBSTHelper(nums, 0, nums.length-1);
+}
+
+// BSTリストの中にキーが存在かどうかによって、true、falseを返します。
+// 再帰
+function keyExist(key, bst){
+    if(bst == null) return false;
+    if(bst.data == key) return true;
+
+    // 現在のノードよりキーが小さければ左に、大きければ右に辿ります。
+    if(bst.data > key) return keyExist(key, bst.left);
+    else return keyExist(key, bst.right);
+}
+
+let balancedBST = sortedArrayToBST([1,2,3,4,5,6,7,8,9,10,11]);
+console.log(balancedBST);
+console.log(keyExist(6, balancedBST));
+console.log(keyExist(10, balancedBST));
+console.log(keyExist(45, balancedBST));
+
+また、反復 iterator を使って、木構造を検索することもできます。
+
+class BinaryTree{
+    constructor(data, left = null, right = null){
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
+}
+
+function sortedArrayToBSTHelper(arr, start, end) {
+    if(start === end) return new BinaryTree(arr[start], null,null);
+
+    let mid = Math.floor((start+end)/2);
+
+    let left = null;
+    if(mid-1 >= start) left = sortedArrayToBSTHelper(arr, start, mid-1);
+
+    let right = null;
+    if(mid+1 <= end) right = sortedArrayToBSTHelper(arr, mid+1, end);
+
+    let root = new BinaryTree(arr[mid], left, right);
+    return root;
+}
+
+function sortedArrayToBST(nums) {
+    if(nums.length == 0) return null;
+    return sortedArrayToBSTHelper(nums, 0, nums.length-1);
+}
+
+// BSTリストの中にキーが存在かどうかによって、true、falseを返します。
+function keyExist(key, bst){
+    let iterator = bst;
+    while(iterator != null){
+        if(iterator.data == key) return true;
+        // 現在のノードよりキーが小さければ左に、大きければ右に辿ります。
+        if(iterator.data > key) iterator = iterator.left;
+        else iterator = iterator.right;
+    }
+
+    return false;
+}
+
+let balancedBST = sortedArrayToBST([1,2,3,4,5,6,7,8,9,10,11]);
+console.log(keyExist(6, balancedBST));
+console.log(keyExist(10, balancedBST));
+console.log(keyExist(45, balancedBST));
+
+平衡二分探索木の実装
+コンストラクタ関数が、配列を引数として受け取り、その配列の要素を使って平衡二分探索木を作成する BinarySearchTree という構造体を作成してください。コンストラクタ関数内で、先ほど作成した関数を呼び出しましょう。この構造体は、BinarySeachTree の全ノードを保持する根ノードを表すインスタンス変数 root と、search と keyExists という 2 つのメソッドを持っています。
+
+
+search メソッドでは、key を受け取り、BinarySearchTree 内を探索し、部分木 subT を返します。キーが BinarySearchTree 内に見つからない場合は null を返します。Exists(key) メソッドは、キーを受け取り、そのキーが BinarySearchTree 内に存在するかどうかを判定する真偽値を返します。
+
+class BinaryTree{
+    constructor(data, left = null, right = null){
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
+}
+
+// BinarySearchTreeという構造体を作成してください。
+class BinarySearchTree {
+    constructor(arrList) {
+        // 受け取った配列をソート
+        let sortedList = arrList.sort(function(a, b) {return a - b;});
+        // rootにBinaryTreeを代入
+        this.root = BinarySearchTree.sortedArrayToBST(sortedList);
+    }
+
+    static sortedArrayToBST(array) {
+        if(array.length === 0) return null
+        return BinarySearchTree.sortedArrayToBSTHelper(array, 0, array.length - 1)
+    }
+
+    static sortedArrayToBSTHelper(array, start, end) {
+        if(start === end) return new BinaryTree(array[start], null, null)
+
+        let mid = Math.floor((start + end) / 2)
+
+        let left = null
+        if(mid - 1 >= start) left = BinarySearchTree.sortedArrayToBSTHelper(array, start, mid - 1)
+
+        let right = null
+        if(mid + 1 <= end) right = BinarySearchTree.sortedArrayToBSTHelper(array, mid + 1, end)
+
+        let root = new BinaryTree(array[mid], left, right)
+        return root
+    }
+
+    keyExist(key) {
+        let iterator = this.root
+        while(iterator !== null) {
+            if(iterator.data === key) return true
+            if(iterator.data > key) iterator = iterator.right
+            else iterator = iterator.left
+        }
+        return false
+    }
+
+    search(key) {
+        let iterator = this.root
+        while(iterator !== null) {
+            if(iterator.data === key) return iterator
+            if(iterator.data > key) iterator = iterator.left
+            else iterator = iterator.right
+        }
+
+        return null
+    }
+
+}
+
+let balancedBST = new BinarySearchTree([1,2,3,4,5,6,7,8,9,10,11]);
+// console.log(balancedBST.keyExist(6));
+console.log(balancedBST.search(6));
+// console.log(balancedBST.keyExist(2));
+// console.log(balancedBST.search(2));
+console.log(balancedBST.search(34));
+
+
+木構造の走査
+木構造の走査（traverse）とは、木の各ノード（点や要素）を 1 回ずつ、特定の規則に従って見て回ることを意味します。これは、人が公園の全ての木を見て回るようなイメージです。この走査は、順番に全てのノードを訪れるため、n 個のノードがある場合、n 回の操作が必要となり、O(n) の時間計算量を必要とします。また、この走査操作は walk とも呼ばれます。
+
+
+以前、私たちは連結リストの走査について学びました。連結リストの走査では、どの要素からでも始めることができ、その要素の値を見て、次に連結された要素へと進むという手順を繰り返します。
+
+
+printList() は、連結リストを辿り、各ノードを表示します。現在のノードから次のノードへのポインタは辺 {currentNode, currentNode.next} を表し、アルゴリズムはグラフ内のすべてのノードを巡回します。
+
+class Node{
+    constructor(data){
+        this.next = null;
+        this.data = data;
+    }
+}
+
+class SinglyLinkedList{
+    // 配列を受け取り、連結リストを作成します。
+    constructor(arr){
+        // 先頭を初期化します。
+        this.head = arr.length > 0 ? new Node(arr[0]) : new Node(null);
+
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i])
+            currentNode = currentNode.next
+        }
+    }
+
+    at(index){
+        let iterator = this.head;
+        // indexの終わりまで反復します。iteratorがnullになる時は、indexが範囲外を意味します。
+        for(let i = 0; i < index; i++){
+            // nextがnullの場合、nullを返します。これはindexが範囲外を意味します。
+            iterator = iterator.next
+            if(iterator == null) return null;
+        }
+
+        return iterator
+    }
+
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }  
+        console.log(str)
+    }
+}
+
+let numList = new SinglyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+numList.printList();
+
+線形のデータ構造とは、連結リストや一次元配列のような、要素が一列に並んでいるようなデータのことを言います。こういったデータ構造を見るとき、普通は最初の要素から順に見ていくことが一般的です。例えば、本棚に並んでいる本を左から右に順番に探していくようなイメージです。
+
+
+一方、木構造は枝分かれした形をしているデータのことを指します。木構造を見ていくときには、線形のデータ構造とは違った方法でデータを見ていく必要があります。
+
+深さ優先走査
+深さ優先探索（depth-first search: DFS）は、グラフや木構造を走査するためのアルゴリズムです。この探索方法は、現在の頂点（ノード）から接続している未訪問の頂点へ進み、進むことができなくなったときに初めて戻るという戦略を採用します。
+
+
+具体的には、深さ優先探索は次のような手順を取ります。
+
+初期ノードから探索を開始します。
+現在のノードに隣接する未訪問のノードがある場合は、そのノードを訪問し、そのノードを新たな「現在のノード」とします。そして、ステップ 2 を再度行います。
+現在のノードに隣接する未訪問のノードがない場合は、直前に訪れたノードに戻ります。そして、ステップ 2 を再度行います。
+全てのノードを訪問するか、または目的のノードが見つかった場合に探索を終了します。
+深さ優先探索は、たとえば迷路の解を見つける場合や、チェスの最適解をを探索する場合など、ある状態から始めてその「深さ」（つまり、それ以降に続く可能性のある状態）を全て探索する際に役立ちます。
+
+幅優先走査
+幅優先探索（breadth-first search: BFS）は、グラフや木構造の探索を行うためのアルゴリズムです。深さ優先探索が一つの経路を深く探索していくのに対して、幅優先探索は現在地点から「幅」方向、すなわち同じ階層にあるノードに対して探索を進めます。
+
+
+具体的には、幅優先探索は次の手順で実行されます。
+
+初期ノードを訪問し、訪問済みのリストやキューに追加します。
+現在のノードに隣接する未訪問のノード全てを訪問し、それぞれを訪問済みのリストやキューに追加します。
+全ての隣接ノードを訪問した後、キューから次のノードを取り出し、それを新たな「現在のノード」とします。そして、ステップ 2 を再度行います。
+全てのノードを訪問するか、または目的のノードが見つかった場合に探索を終了します。
+幅優先探索は、グラフ上の最短経路問題や、マルチプレイヤーオンラインゲームのマッチングシステム等、多くの実用的なアプリケーションで利用されています。この探索手法は、ノード間の距離が一様である場合に特に有用で、その場合、最初に見つかった経路が最短経路となります。
+
+
+
+深さ優先走査(1)
+二分木は一種のデータ構造で、各ノードが最大で二つの子ノードを持つ特性を有しています。根ノードと呼ばれる特殊なノードから始まり、これが最上位のノードとなりました。
+
+深さ優先探索は一つの探索戦略であり、可能な限り深くノードを探索することを特徴としています。この探索戦略は、二分木に対して異なる順序で適用することが可能で、それにより以下の 4 つの探索戦略が導き出されます。
+
+前順走査(F->B->A->D->C->E->G->H)
+前順走査（pre-order traversal）では、まず根ノード（N）を調査します。次に、左の子ノード（L）を再帰的に探索し、最後に右の子ノード（R）を再帰的に探索します。この探索の順序は NLR と記述されます。
+                    F 
+            B               G
+        A       D       H
+            C       E
+
+F->B->A->D->C->E->G->H
+
+間順走査
+間順走査（in-order traversal）では、まず左の子ノード（L）を再帰的に探索します。次に、根ノード（N）を調査し、最後に右の子ノード（R）を再帰的に探索します。この探索の順序は LNR と記述されます。間順走査の特徴的な使用例は二分探索木におけるノードの値の昇順表示です。二分探索木では、すべてのノードはその左子ノード（とその子孫）より大きく、右子ノード（とその子孫）より小さい値を持つため、間順走査により値を昇順に取得できます。
+
+                    F 
+            B               G
+        A       D       H
+            C       E
+
+A->B->C->D->E->F->G->H
+
+後順走査
+後順走査（post-order traversal）では、まず左の子ノード（L）を再帰的に探索します。次に、右の子ノード（R）を再帰的に探索し、最後に根ノード（N）を調査します。この探索の順序は LRN と記述されます。
+
+                    F 
+            B               G
+        A       D       H
+            C       E
+
+A->C->E->D->B->H->G->F
+
+逆間順走査
+逆間順走査（reverse in-order traversal）では、まず右の子ノード（R）を再帰的に探索します。次に、根ノード（N）を調査し、最後に左の子ノード（L）を再帰的に探索します。この探索の順序は RNL と記述されます。逆間順走査は二分探索木（BST）におけるノードの値の降順表示に用いられます。これは、中順探索の探索順序を逆にしたもので、右子ノードから始まり左子ノードで終わるという点が特徴です。
+
+
+                    F 
+            B               G
+        A       D       H
+            C       E
+
+H->G->F->E->D->C->B->A
+
+走査の実装
+二分探索木の走査は、再帰関数を通じて実装することが可能です。具体的に間順走査の実装を見てみましょう。間順走査は BST の全ノードを順番に出力するものであり、これはツリーの要素を昇順に列挙するのに役立ちます。再帰呼び出しは次のように定義されています。
+inOrderTreeWalk(tRoot)
+    if tRoot != null
+        inOrderTreeWalk(tRoot.left)
+        print(tRoot.data)
+        inOrderTreeWalk(tRoot.right)
+
+以下のような二分探索木を考えてみましょう。
+
+    20
+   /  \
+  10  30
+ / \  / \
+5  15 25 35
+この二分探索木の全ノードを間順走査すると、ノードの値は昇順（5, 10, 15, 20, 25, 30, 35）に出力されます。では、具体的な実行フローを追ってみましょう。初めに、関数 inOrderTreeWalk(20) が呼び出されます。
+
+まず 20 は null ではないので、左部分木に対する間順走査 inOrderTreeWalk(10) が呼び出されます。
+    10 は null ではないので、再びその左部分木 inOrderTreeWalk(5) が呼び出されます。
+        5 は null ではないので、その左部分木に対する inOrderTreeWalk(null) が呼び出されますが、これは null なので何もしません。
+        次に 5（自身）を出力します。
+        最後に 5 の右部分木に対する inOrderTreeWalk(null) が呼び出されますが、これも null なので何もしません。
+    その後 10（自身）を出力します。
+    最後に 10 の右部分木に対する inOrderTreeWalk(15) が呼び出され、15 が出力されます。
+次に 20（自身）を出力します。
+同様に 20 の右部分木に対する inOrderTreeWalk(30) が呼び出され、30 とその下の 25 と 35 が出力されます。
+
+では、これらの走査をサポートするために、二分木のデータ構造を拡張してみます。まず二分木に printInOrder() メソッドを追加して、間順走査から実装しましょう。また、根ノードの printInOrder() メソッドを呼び出す printSorted() をサポートするように BST を拡張します。
+
+class BinaryTree{
+    constructor(data, left = null, right = null){
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
+
+    // 'printInOrder'関数を定義します。この関数は、二分木の各ノードのデータを間順走査で表示します。
+    printInOrder() {
+        // 'inOrderWalk'関数を使って、二分木を間順走査します。起点となるノードは二分木のルートノードとします。
+        this.inOrderWalk(this);
+        // 全てのノードのデータを表示し終わったら、改行を出力します。
+        console.log("");
+    }
+
+    // 'inOrderWalk'関数を定義します。この関数は、指定したノードから始まる部分木を間順走査します。
+    inOrderWalk(tRoot) {
+        // 指定したノードがnullでなければ、以下の処理を行います。（nullは通常、二分木の末端を表す）
+        if (tRoot !== null) {
+            // 左部分木を間順走査します。再帰的にこの関数を呼び出すことで、巡回を行います。
+            this.inOrderWalk(tRoot.left);
+            // 左部分木を巡回した後、自ノードのデータを出力します。出力の末尾にスペースを追加することで、データが分かりやすく表示されます。
+            process.stdout.write(tRoot.data + " ");
+            // 最後に、右部分木を間順走査します。これも再帰的にこの関数を呼び出すことで、巡回を行います。
+            this.inOrderWalk(tRoot.right);
+        }
+    }
+}
+
+class BinarySearchTree{
+    constructor(arrList){
+        // JS ソートライブラリの sort() は文字列に対しては問題なくソートしますが、数値に対しては特別なルールが必要です。sort関数は引数に関数を指定でき、関数でソートのルールを定義できます。aとbを比較する関数で、a-bが負の場合はa < b、0の場合はa == b、そうでない場合はa > bとなります。自分でソート関数を作成することができます。
+        let sortedList = arrList.sort(function(a, b) {return a - b;});
+        this.root = BinarySearchTree.sortedArrayToBST(sortedList);
+    }
+
+    static sortedArrayToBST(array) {
+        if(array.length == 0) return null;
+        return BinarySearchTree.sortedArrayToBSTHelper(array, 0, array.length-1);
+    }
+
+    static sortedArrayToBSTHelper(arr, start, end) {
+        if(start === end) return new BinaryTree(arr[start], null,null);
+        
+        let mid = Math.floor((start+end)/2);
+        
+        let left = null;
+        if(mid-1 >= start) left = BinarySearchTree.sortedArrayToBSTHelper(arr, start, mid-1);
+        
+        let right = null;
+        if(mid+1 <= end) right = BinarySearchTree.sortedArrayToBSTHelper(arr, mid+1, end);
+        
+        let root = new BinaryTree(arr[mid], left, right);
+        return root;
+    }
+
+    keyExist(key){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data == key) return true;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }
+        
+        return false;
+    }
+
+    search(key){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data == key) return iterator;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }
+        
+        return null;
+    }
+
+    printSorted(){
+        this.root.printInOrder();
+    }
+}
+
+let balancedBST = new BinarySearchTree([1,2,3,4,5,6,7,8,9,10,11]);
+let balancedBST2 = new BinarySearchTree([4,43,36,46,32,7,97,95,34,8,96,35,85,1010,232]);
+balancedBST.printSorted();
+balancedBST2.printSorted();
+
+以下、同じように前順走査、後順走査、逆間順走査をサポートするようにデータ構造を拡張してください。
+
+前順走査
+class BinaryTree{
+    constructor(data, left = null, right = null){
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
+
+    printPreOrder(){
+        this.preOrderWalk(this);
+        console.log("");
+    }
+
+    // 前順（pre-order）（NLR）
+    preOrderWalk(tRoot){
+        if(tRoot != null){
+            process.stdout.write(tRoot.data + " ");
+            this.preOrderWalk(tRoot.left);
+            this.preOrderWalk(tRoot.right);
+        }
+    }
+
+}
+
+class BinarySearchTree{
+    constructor(arrList){
+        let sortedList = arrList.sort(function(a, b) {return a - b;});
+        this.root = BinarySearchTree.sortedArrayToBST(sortedList);
+    }
+
+    static sortedArrayToBST(array) {
+        if(array.length == 0) return null;
+        return BinarySearchTree.sortedArrayToBSTHelper(array, 0, array.length-1);
+    }
+
+    static sortedArrayToBSTHelper(arr, start, end) {
+        if(start === end) return new BinaryTree(arr[start], null,null);
+        
+        let mid = Math.floor((start+end)/2);
+        
+        let left = null;
+        if(mid-1 >= start) left = BinarySearchTree.sortedArrayToBSTHelper(arr, start, mid-1);
+        
+        let right = null;
+        if(mid+1 <= end) right = BinarySearchTree.sortedArrayToBSTHelper(arr, mid+1, end);
+        
+        let root = new BinaryTree(arr[mid], left, right);
+        return root;
+    }
+
+    keyExist(key){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data == key) return true;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }        
+        return false;
+    }
+
+    search(key){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data == key) return iterator;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }        
+        return null;
+    }
+
+    printSorted(){
+        this.root.printPreOrder();
+    }
+}
+
+let balancedBST = new BinarySearchTree([1,2,3,4,5,6,7,8,9,10,11]);
+let balancedBST2 = new BinarySearchTree([4,43,36,46,32,7,97,95,34,8,96,35,85,1010,232]);
+balancedBST.printSorted();
+balancedBST2.printSorted();
+
+後順走査
+class BinaryTree{
+    constructor(data, left = null, right = null){
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
+
+    // 後順（post-order）（LRN）
+    pastOrderWalk(tRoot){
+        if(tRoot != null){
+            this.pastOrderWalk(tRoot.left);
+            this.pastOrderWalk(tRoot.right);
+            process.stdout.write(tRoot.data + " ");
+        }
+    }
+
+    printPastOrder(){
+        this.pastOrderWalk(this);
+        console.log("");
+    }
+
+}
+
+class BinarySearchTree{
+    constructor(arrList){
+        let sortedList = arrList.sort(function(a, b) {return a - b;});
+        this.root = BinarySearchTree.sortedArrayToBST(sortedList);
+    }
+
+    static sortedArrayToBST(array) {
+        if(array.length == 0) return null;
+        return BinarySearchTree.sortedArrayToBSTHelper(array, 0, array.length-1);
+    }
+
+    static sortedArrayToBSTHelper(arr, start, end) {
+        if(start === end) return new BinaryTree(arr[start], null,null);
+        
+        let mid = Math.floor((start+end)/2);
+        
+        let left = null;
+        if(mid-1 >= start) left = BinarySearchTree.sortedArrayToBSTHelper(arr, start, mid-1);
+        
+        let right = null;
+        if(mid+1 <= end) right = BinarySearchTree.sortedArrayToBSTHelper(arr, mid+1, end);
+        
+        let root = new BinaryTree(arr[mid], left, right);
+        return root;
+    }
+
+    keyExist(key){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data == key) return true;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }
+        
+        return false;
+    }
+
+    search(key){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data == key) return iterator;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }
+        
+        return null;
+    }
+
+    printSorted(){
+        this.root.printPastOrder();
+    }
+}
+
+let balancedBST = new BinarySearchTree([1,2,3,4,5,6,7,8,9,10,11]);
+let balancedBST2 = new BinarySearchTree([4,43,36,46,32,7,97,95,34,8,96,35,85,1010,232]);
+balancedBST.printSorted();
+balancedBST2.printSorted();
+
+逆間順走査
+class BinaryTree{
+    constructor(data, left = null, right = null){
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
+
+    printReverseOrder(){
+        this.reverseOrderWalk(this);
+        console.log("");
+    }
+
+    // 逆間順（reverse-order）（RNL）
+    reverseOrderWalk(tRoot){
+        if(tRoot != null){
+            
+            this.reverseOrderWalk(tRoot.right);
+            process.stdout.write(tRoot.data +" ");
+            this.reverseOrderWalk(tRoot.left);
+
+        }
+    }
+}
+
+class BinarySearchTree{
+    constructor(arrList){
+        let sortedList = arrList.sort(function(a, b) {return a - b;});
+        this.root = BinarySearchTree.sortedArrayToBST(sortedList);
+    }
+
+    static sortedArrayToBST(array) {
+        if(array.length == 0) return null;
+        return BinarySearchTree.sortedArrayToBSTHelper(array, 0, array.length-1);
+    }
+
+    static sortedArrayToBSTHelper(arr, start, end) {
+        if(start === end) return new BinaryTree(arr[start], null,null);
+        
+        let mid = Math.floor((start+end)/2);
+        
+        let left = null;
+        if(mid-1 >= start) left = BinarySearchTree.sortedArrayToBSTHelper(arr, start, mid-1);
+        
+        let right = null;
+        if(mid+1 <= end) right = BinarySearchTree.sortedArrayToBSTHelper(arr, mid+1, end);
+        
+        let root = new BinaryTree(arr[mid], left, right);
+        return root;
+    }
+
+    keyExist(key){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data == key) return true;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }
+        
+        return false;
+    }
+
+    search(key){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data == key) return iterator;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }
+        
+        return null;
+    }
+
+    printSorted(){
+        this.root.printReverseOrder();
+    }
+}
+
+let balancedBST = new BinarySearchTree([1,2,3,4,5,6,7,8,9,10,11]);
+let balancedBST2 = new BinarySearchTree([4,43,36,46,32,7,97,95,34,8,96,35,85,1010,232]);
+balancedBST.printSorted();
+balancedBST2.printSorted();
+
+BST「挿入」
+二分探索木は、左の子ノードが現在のノードより小さく、右の子ノードが現在のノードより大きいというプロパティを持つデータ構造です。新しい値を二分探索木に挿入するためには、このプロパティを維持する必要があります。
+
+
+具体的な挿入の手順は以下の通りです。
+
+関数 Insert(root, v): この関数は二つの引数、つまり既存の BST の根ノード root と挿入したい新しい値 v を受け取ります。この関数の目的は、BST の特性を維持しながら、値 v を BST に挿入することです。
+BST の探索: 新しい値 v を適切な位置に挿入するためには、まず BST を探索する必要があります。これは BST の性質を利用した探索で、現在見ているノードの値と比較して、v がそのノードの値よりも大きければ右の子ノードに、小さければ左の子ノードに移動します。
+値の挿入: BST を探索し、葉ノードに到達したら、そのノードは新しい値 v の親ノードとなります。そして、v を親ノードの左または右に挿入します。
+BST が空の場合: 親ノードが存在しない場合、新しい値 v は新しい BST の根ノードとなります。
+
+この挿入操作は、一般的な BST の実装に追加することが可能で、新たに追加するメソッド insert(value) という形で実装されます。これにより、BST のデータ構造が拡張され、新しい値を BST に挿入できるようになります。
+
+class BinaryTree{
+    constructor(data, left = null, right = null){
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
+
+    printInOrder(){
+        this.inOrderWalk(this);
+        console.log("");
+    }
+
+    inOrderWalk(tRoot){
+        if(tRoot !== null){
+            this.inOrderWalk(tRoot.left);
+            process.stdout.write(tRoot.data + " ");
+            this.inOrderWalk(tRoot.right);
+        }
+    }
+}
+
+class BinarySearchTree{
+    constructor(arrList){
+        let sortedList = arrList.sort(function(a, b) {return a - b;});
+        this.root = BinarySearchTree.sortedArrayToBST(sortedList);
+    }
+
+    static sortedArrayToBST(array) {
+        if(array.length == 0) return null;
+        return BinarySearchTree.sortedArrayToBSTHelper(array, 0, array.length-1);
+    }
+
+    static sortedArrayToBSTHelper(arr, start, end) {
+        if(start === end) return new BinaryTree(arr[start], null,null);
+        
+        let mid = Math.floor((start+end)/2);
+        
+        let left = null;
+        if(mid-1 >= start) left = BinarySearchTree.sortedArrayToBSTHelper(arr, start, mid-1);
+        
+        let right = null;
+        if(mid+1 <= end) right = BinarySearchTree.sortedArrayToBSTHelper(arr, mid+1, end);
+        
+        let root = new BinaryTree(arr[mid], left, right);
+        return root;
+    }
+
+    keyExist(key){
+        let iterator = this.root;
+        while(iterator !== null){
+            if(iterator.data === key) return true;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }
+        
+        return false;
+    }
+
+    search(key){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data == key) return iterator;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }
+        
+        return null;
+    }
+    
+    insert(value) {
+        // 根ノードから探索を始めます。
+        let iterator = this.root;
+        // iteratorがnullになるまでループします。nullとなるのは、次に進むべきノード（左か右）が存在しないときです。
+        while (iterator !== null) {
+            // valueが現在のノードのデータより小さく、左の子ノードが存在しない場合、
+            // 新しいノードを左の子ノードとして追加します。
+            if (iterator.data > value && iterator.left === null) {
+                iterator.left = new BinaryTree(value);
+            }
+            // valueが現在のノードのデータより大きく、右の子ノードが存在しない場合、
+            // 新しいノードを右の子ノードとして追加します。
+            else if (iterator.data < value && iterator.right === null) {
+                iterator.right = new BinaryTree(value);
+            }
+            // valueが現在のノードのデータより小さい場合、左の子ノードへ移動します。
+            // そうでなければ、右の子ノードへ移動します。
+            iterator = iterator.data > value ? iterator.left : iterator.right;
+        }
+    }
+
+    printSorted(){
+        this.root.printInOrder();
+    }
+}
+
+let balancedBST = new BinarySearchTree([4,43,36,46,32,7,97,95,34,8,96,35,85,1010,232]);
+balancedBST.printSorted();
+balancedBST.insert(5);
+balancedBST.printSorted();
+balancedBST.insert(47);
+balancedBST.printSorted();
+// 0をinsertします。
+balancedBST.insert(0);
+balancedBST.printSorted();
+
+この挿入演算子は、BST のプロパティが維持されることは保証しますが、BST が平衡二分探索木であることを保証するものではない点には注意してください。
+
+BST「削除」
+BST からノードを削除する際にも、BST の特性を維持する必要があります。つまり、削除操作後も二分探索木の性質が崩れないようにする必要があります。
+
+
+BST からノードを削除するのは、単にノードを BST に挿入するよりもはるかに厄介です。その理由は、削除するノードの位置にどのノードを置くのか決めなければならないからです。さらに、その選ばれたノードの部分木（子ノードとその下のノード全てを含む構造）を適切に BST の中に配置しなければならないという課題もあります。
+
+
+「移植」とは、一つの部分木を異なる部分木で置き換える作業のことを指します。例えば、あるノードとその子ノード全て（部分木）を、別のノードとその子ノード全て（部分木）で置き換えることです。もし置き換えるノードが BST の根ノードであれば、新たに選ばれた部分木が新しい根ノードとなります。
+
+BST からノードを削除するアルゴリズムは次のように動作します。まず、削除するノード（N）とその親ノード（P）を特定します。親ノード（P）がない場合、つまり null の場合、それは削除対象のノード（N）が BST の根ノードであるということを意味します。
+
+BST からノードを削除するアルゴリズム
+
+
+Case 0:
+
+木が空の場合、または削除対象のノードが存在しない場合、既存の木をそのまま返します。
+
+
+Case 1:
+
+削除したいノード（N）が葉ノードの場合、そのノードを単純に削除します。
+
+
+Case 2:
+
+削除したいノード（N）が左側に子ノードを持たない場合、そのノードの右側の部分木を親ノード（P）の部分木に置き換えます。
+
+
+Case 3:
+
+削除したいノード（N）が右側に子ノードを持たない場合、そのノードの左側の部分木を親ノード（P）の部分木に置き換えます。
+
+
+Case 4:
+
+削除したいノード（N）が左右に子ノードを持つ場合、少し複雑な処理が必要になります。この場合、削除したいノードの後続ノード（該当ノードの値よりも大きく、それらの中で最も小さい値を持つノード）を見つけます。後続ノード（S）は、削除したいノードの右側の部分木に必ず存在します。
+
+
+(I) 後続ノードの親ノードを SP とします。SP が削除したいノード（N）と同じ場合、つまり後続ノード（S）が削除したいノード（N）の直接の子である場合、後続ノード（S）をその親ノード（SP）に置き換えます。後続ノード（S）であり、削除したいノード（N）より大きい最小値であるため、定義通り左部分木は常に null になります。
+
+
+(II) しかし、SP が削除したいノード（N）と異なる場合、つまり後続ノード（S）が削除したいノード（N）の右部分木の深部にある場合、次の処理を行います。
+
+SP から後続ノード（S）を取り除き、その位置に後続ノード（S）の右部分木を移植します。その結果、後続ノード（S）は孤立し、後続ノード（S）の右部分木は元々の位置に残ります。
+削除したいノード（N）の位置に後続ノード（S）を移植します。その結果、後続ノード（S）が削除したいノードの親ノード（P）の新しい子ノードになります。
+最後に、削除したいノード（N）の左部分木を後続ノード（S）の左部分木に設定します。これにより、削除したいノード（N）の左部分木が保持され、後続ノード（S）が削除したいノード（N）の全ての子を引き継ぎます。これらの操作により、二分探索木のプロパティが維持されます。
+
+キーを受け取り、その値がキーと等しいノードを削除する delete(key) と呼ばれる新しいメソッドを BinarySearchTree に追加してください。木の中にキーが存在しない場合、何の削除も行いません。
+
+class BinaryTree{
+    constructor(data, left = null, right = null){
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
+
+    printInOrder(){
+        this.inOrderWalk(this);
+        console.log("");
+    }
+
+    inOrderWalk(tRoot){
+        if(tRoot != null){
+            this.inOrderWalk(tRoot.left);
+            process.stdout.write(tRoot.data + " ");
+            this.inOrderWalk(tRoot.right);
+        }    
+    }
+}
+
+class BinarySearchTree{
+    constructor(arrList){
+        let sortedList = arrList.sort(function(a,b){return a-b;});
+        this.root = BinarySearchTree.sortedArrayToBST(sortedList);
+    }
+
+    static sortedArrayToBST(array){
+        if(array.length == 0) return null;
+        return BinarySearchTree.sortedArrayToBSTHelper(array,0,array.length-1);
+    }
+
+    static sortedArrayToBSTHelper(array,start,end){
+        if(start == end) return new BinaryTree(array[start],null,null);
+        
+        let mid = Math.floor((start+end)/2);
+
+        let left = null;
+        if(mid-1 >= start) left = BinarySearchTree.sortedArrayToBSTHelper(array,start,mid-1);
+
+        let right = null;
+        if(mid+1 <= end) right = BinarySearchTree.sortedArrayToBSTHelper(array,mid+1,end);
+
+        let root = new BinaryTree(array[mid],left,right);
+        return root;
+
+    }
+
+    keyExist(key){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data == key) return true;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }
+        return false;
+    }
+
+    search(key){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data == key) return iterator;
+            if(iterator.data > key) iterator = iterator.left;
+            else iterator = iterator.right;
+        }        
+        return iterator;
+    }
+
+    insert(value){
+        let iterator = this.root;
+        while(iterator != null){
+            if(iterator.data > value && iterator.left == null) iterator.left = new BinaryTree(value);
+            else if(iterator.data < value && iterator.right == null) iterator.right = new BinaryTree(value);
+            iterator = (iterator.data > value)? iterator.left: iterator.right;
+        }
+        return this.root;       
+    }
+
+    transplant(nodeParent, node, target){
+        if (nodeParent == null) this.root = target;
+        else if (nodeParent.left == node) nodeParent.left = target;
+        else nodeParent.right = target;
+    }    
+
+    deleteNode(key){
+        if (this.root == null) return;
+        let node = this.search(key);
+        if (!this.keyExist(key)) return;
+
+        let parent = this.findParent(node);
+        // case 1: ノードNが葉ノード
+        // 親ノードからnodeへの参照をnullに変更してnodeを削除します。
+        if (node.left == null && node.right == null) {
+            if(parent.left.data == key) parent.left = null;
+            else if(parent.right.data == key) parent.right = null;
+        }
+
+        // case 2: ノードNの左が空
+        if (node.left == null) this.transplant(parent, node, node.right);
+        // case 3: ノードNの右が空
+        else if (node.right == null) this.transplant(parent, node, node.left);
+        // case 4: 2つの子を持っている場合
+        else{
+            let successor = this.findSuccessor(node);
+            let successorP = this.findParent(successor);
+
+            // case 4 後続ノードSがすぐ右側にいる場合 : この場合、ノードNが後続ノードSの親になっているため、case4は必要ありません。単純にNの親であるPの部分木とSを移植すればokです。
+            // 特別なケース (case 4) 後続ノードSがすぐ右側にいない場合 : この場合、後続Sの親も変更しなければいけません。
+            if (successor != node.right){
+                // 後続ノードSをSの右部分木で移植します。Sをアップデートします。
+                this.transplant(successorP, successor, successor.right);
+                // Sの右側はノードNの右側になっている必要があります。
+                successor.right = node.right;
+
+            }
+            // ノードNを後続Sで移植します。Sの左部分木をノードNの左部分木にします。
+            this.transplant(parent, node, successor);
+            successor.left = node.left;
+        }
+    }          
+
+    findParent(node){
+        let iterator = this.root;
+        let parent;
+        while (iterator != node){
+            parent = iterator;
+            iterator = iterator.data > node.data ? iterator.left: iterator.right;
+        }    
+        return parent;
+    }
+    
+    findSuccessor(node){
+
+        // 部分木
+        let targetNode = node;
+        // keyがBST内に存在しない場合、nullを返します。
+        if (targetNode == null) return null;
+        // keyのノードの右にある最小値を探します。
+        if (targetNode.right != null) return this.minimumNode(targetNode.right);
+
+        let successor = null;
+        let iterator = this.root;
+
+        while (iterator != null) {
+            if (targetNode.data == iterator.data) return successor;
+            // successorを左方向へずらしていきます。
+            if (targetNode.data < iterator.data && (successor == null || iterator.data < successor.data)) successor = iterator;
+            if (targetNode.data < iterator.data) iterator = iterator.left;
+            else iterator = iterator.right;
+        }    
+        return successor;
+    }
+
+    minimumNode(node){
+        let iterator = node;
+        while (iterator != null && iterator.left != null) iterator = iterator.left;
+        return iterator;
+    }
+    
+    printSorted(){
+        this.root.printInOrder();
+    }
+}
+
+let balancedBST = new BinarySearchTree([4,43,36,46,32,7,97,95,34,8,96,35,85,1010,232]);
+
+balancedBST.printSorted();
+balancedBST.deleteNode(43);
+balancedBST.printSorted();
+balancedBST.deleteNode(7);
+balancedBST.printSorted();
+balancedBST.deleteNode(4);
+balancedBST.printSorted();
+balancedBST.deleteNode(1010);
+balancedBST.printSorted();
+// 存在しない0をdeleteNodeします。
+balancedBST.deleteNode(0);
+balancedBST.printSorted();
+
+BST「ランダム構築」
+二分探索木は、その性質上、各ノードの左側には自身より小さい値、右側には自身より大きい値を持つノードが配置されるデータ構造です。BST は検索、挿入、削除の操作を効率よく行うことができますが、効率性はそのツリーの形状に大きく依存します。
+
+
+ランダムに構築される BST とは、与えられたリストからランダムにノードを選んで二分探索木を構築することを意味します。ノードの選択がランダムに行われるため、結果的に形成される BST の形状はさまざまになります。ここで挙げられているアルゴリズムでは、与えられたn個の値のリストをまずランダムにシャッフルします。これにより、n!（nの階乗）通りの順列が可能となります。各順列が選ばれる確率は一様になります。
+
+
+そして、シャッフルされた配列から順に値を取り出し、BST に挿入していきます。BST に値を挿入するときは insert() 関数を用います。シャッフルによって各ノードがランダムに選ばれるため、BST の平均的な高さは O(
+log
+n
+) となることが期待されます。これは、ランダムなノード選択により、理想的にはバランスの良い二分探索木（すなわち、各階層でノードが最大限に分布している状態）が形成されやすいからです。
+
+
+このような分析が、Javed A. Aslam によって証明されました。彼はこのランダムな挿入が実際にどの程度 BST の高さに影響を及ぼすのかを理論的に解析しました。
+
+
+例えば、元の配列が [1,2,3,4,5] の場合、最も非効率的な BST を作る方法は、この配列をそのまま挿入する方法と、逆順（[5,4,3,2,1]）で挿入する方法の 2 つだけです。これらの場合だけは BST の高さが O(
+n
+) となります。しかし、これらのパターン以外では、よりバランスの良い BST が構築されます。すなわち、全ての値が右側に連なるような構造や、全ての値が左側に連なるような構造以外の BST は、平均的に高さが O(
+log
+n
+) となることが期待されます。
+
+
+そして、配列をシャッフルすることで、このような非効率的な BST が構築される確率は極めて低くなります。なぜなら、配列のシャッフルにより生じる可能性のある順列は n! 通りあり、その中で非効率的な BST が生じるパターンはごく少数だからです。
+
+
+したがって、このランダムな挿入アルゴリズムを使用することで、平均的には高さが O(
+log
+n
+) となる、バランスの良い BST を構築することが可能となります。
+
+
+BST ランダム構築の実装
+ランダムに構築される二分探索木を生成するメソッド generateRandomBST(arrList) を作成します。関数のパラメータとして与えられる arrList は、BST を作成する元となるデータのリストです。
+
+
+このメソッドの具体的な動作は以下の通りです。
+
+まず、入力されたリスト arrList が空でないことを確認します。空であれば、二分探索木の根も null とします。この操作により、空の入力に対して適切に対応します。
+次に、shuffle 関数でリスト arrList をランダムにシャッフルします。この shuffle 関数は BinarySearchTree クラスに定義されます。シャッフルにより、同じ値のリストからでもさまざまな形状の BST が生成されます。
+シャッフル後のリストの最初の要素 arrList[0] を取り出して、新たな BinaryTree ノードを作成し、これを BST の根とします。
+最後に、シャッフルされたリストの各要素に対して for 文を用いて、insert メソッドを用いて BST に追加します。insert メソッドは、値を適切な位置に挿入するために、BST の性質（各ノードの左の子ノードは親より小さく、右の子ノードは親より大きい）に従って動作します。
+以上の処理を通じて、与えられたリストからランダムに構築された BST を生成することができます。以下のエディタで、開発してみましょう。
+
+// 受け取った配列をシャッフルし、insertメソッド使って要素を1つずつ空の二分探索木に挿入していきます。シャッフルすることで、根ノードの選択をランダムにすることができ、平均の高さがO(logn)に近づきます。
+// 例えば[1,2,3,4,5]という配列があった時、根ノードを1として順に二分探索木を作成すると、2 から 5 まで全て右側の子となってします。これは高さがO(n)となり非常に効率の悪い構造ですが、このような構造になるのは[1,2,3,4,5]と[5,4,3,2,1]の2通りしかありません。その確率は 2/5! となり要素数が増えるほど低くなります。
+
+class BinaryTree{
+    constructor(data, left = null, right = null){
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
+
+    printInOrder(){
+        this.inOrderWalk(this);
+        console.log("");
+    }
+
+    inOrderWalk(tRoot){
+        if(tRoot != null){
+            this.inOrderWalk(tRoot.left);
+            process.stdout.write(tRoot.data + " ");
+            this.inOrderWalk(tRoot.right);
+        }    
+    }
+}
+
+class BinarySearchTree {
+    // コンストラクタで、与えられた配列からランダムな二分探索木を生成します。
+    constructor(arrList) {
+        this.generateRandomBST(arrList);
+    }
+
+    // 受け取った配列をシャッフルしてから、それを元に二分探索木を作る関数です。
+    generateRandomBST(arrList) {
+        // 配列が空であれば、根ノード(root)をNoneにします。
+        if (!arrList.length) {
+            this.root = null;
+        } else {
+            // 配列をシャッフルします。
+            BinarySearchTree.shuffle(arrList);
+            // 配列の最初の要素を根ノードに設定します。
+            this.root = new BinaryTree(arrList[0]);
+            // 配列の要素全てを二分探索木に挿入します。配列がシャッフルされているので、結果としてランダムな二分探索木が生成されます。
+            for (let i = 0; i < arrList.length; i++) {
+                this.insert(arrList[i]);
+            }
+        }
+    }
+
+    insert(value) {
+        let iterator = this.root;
+        while(iterator != null) {
+            if(iterator.data > value && iterator.left == null) iterator.left = new BinaryTree(value);
+            else if(iterator.data < value && iterator.right == null) iterator.right = new BinaryTree(value);
+            iterator = (iterator.data > value)? iterator.left: iterator.right;
+        }
+        return this.root;       
+    }
+
+    // リストをin-place（元の配列自体を書き換え）でシャッフルする静的メソッドです。
+    static shuffle(list) {
+        // 配列の最後の要素から順に、ランダムな位置の要素と交換していきます。
+        for (let i = list.length - 1; i >= 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [list[i], list[j]] = [list[j], list[i]];
+        }
+        // シャッフルされた配列を返します。
+        return list;
+    }
+
+    static maximumDepth(root) {
+        if(root == null) return 0;        
+        let leftdepth = BinarySearchTree.maximumDepth(root.left);       
+        let rightdepth = BinarySearchTree.maximumDepth(root.right);        
+        return (rightdepth > leftdepth)? rightdepth + 1: leftdepth + 1;
+    }
+
+    printSorted() {
+        if(this.root == null) return;
+        this.root.printInOrder();
+    }
+}
+
+// ランダムに要素を生成するためのクラスです。
+class RandomContainer {
+    // 指定されたサイズの、昇順に並んだ配列を生成する静的メソッドです。
+    static generateList(size) {
+        let list = [];
+        // 指定されたサイズの数だけ、昇順に要素を追加していきます。
+        for (let i = 0; i < size; i++) {
+            list.push(i);
+        }
+        // 生成された昇順配列を返します。
+        return list;
+    }
+}
+
+let list = RandomContainer.generateList(256);
+let balancedBST = new BinarySearchTree(list);
+balancedBST.printSorted();
+
+console.log(16*16) // 要素数が増えると高さが O(logn) に近づきます。
+console.log("MaxDepth: " + BinarySearchTree.maximumDepth(balancedBST.root));
+
+let list2 = [];
+let balancedBST2 = new BinarySearchTree(list2);
+balancedBST2.printSorted();
+console.log("MaxDepth: " + BinarySearchTree.maximumDepth(balancedBST2.root));
+
+let list3 = [];
+let balancedBST3 = new BinarySearchTree(list3);
+console.log("MaxDepth: " + BinarySearchTree.maximumDepth(balancedBST3.root));
