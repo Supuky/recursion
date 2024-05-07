@@ -1,0 +1,526 @@
+双方向リスト（doubly linked list）は、連結リストの 1 つで、双方向の走査を可能にするものです。双方向リストでは、各ノードが次のノードへの単一のポインタだけでなく、前のノードへのポインタも含んでいます。このため、リストを順方向と逆方向の両方で走査することができます。
+
+片方向リストでは、一方向（通常、先頭から末尾まで）のみの走査が可能でした。片方向リストを逆方向にたどるには、リストの末尾からポインタをたどっていく必要があり、非常に不便でした。一方、双方向リストでは、適切なポインタをたどるだけで、リストをどちらの方向にもたどることができます。
+
+双方向リストは一般に、片方向リストよりもやや複雑で、より多くのメモリを必要とします。これは、ノードごとに 1 つだけでなく 2 つのポインタを必要とするからです。しかし、双方向の探索が必要な場合などには有効になります。
+
+まずは具体例をみて、双方向リストの構造を理解し、データを初期化することで、双方向リストの特性を見てみましょう。
+
+class Node{
+    // 前後を追跡します。
+    constructor(data){
+        this.data = data;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+// リストは少なくとも1つのノードを持っている必要があります。
+// ヌルリストをサポートしたい場合は、それに応じてコードを追加してください。
+class DoublyLinkedList{
+    constructor(arr){
+        // 今回は末尾を追跡します。
+        if(arr.length <= 0){
+            this.head =  new Node(null);
+            this.tail = this.head;
+            return;
+        }
+
+        this.head = new Node(arr[0]);
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i]);
+            // 次のノードの前のノードをcurrent Nodeに割り当てます。
+            currentNode.next.prev = currentNode;
+            currentNode = currentNode.next;
+        }
+
+        // このcurrent Nodeは最後のnodeです。
+        this.tail = currentNode;
+    }
+
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }  
+        console.log(str);
+    }
+}
+
+let numList = new DoublyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+
+numList.printList();
+
+console.log(numList.head.data);
+console.log(numList.head.next.data);
+
+console.log(numList.tail.data);
+console.log(numList.tail.prev.data);
+
+双方向リスト - インデックス
+双方向リストにおいても、リスト内の要素にアクセスするには、線形探索を用います。
+
+つまり、片方向リストの時に実装した、i 番目のインデックスを受け取り i+1 番目のノードを返す at 関数、キーを受け取って要素の中から最初のキーを検索する find 関数と同じ処理を双方向リストでも実装します。
+
+時間計算量は片方向リストの時と同様に O(n) になります。
+
+class Node{
+    constructor(data){
+        this.data = data;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class DoublyLinkedList{
+    constructor(arr){
+        if(arr.length <= 0){
+            this.head =  new Node(null);
+            this.tail = this.head;
+            return;
+        }
+
+        this.head = new Node(arr[0]);
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i]);
+            currentNode.next.prev = currentNode;
+            currentNode = currentNode.next;
+        }
+
+        this.tail = currentNode;
+    }
+
+    at(index){
+        let iterator = this.head;
+        // 片方向リストと同じ処理
+        for(let i = 0; i < index; i++){
+            iterator = iterator.next;
+            if(iterator == null) return null;
+        }
+
+        return iterator;
+    }
+
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }
+        console.log(str)
+    }
+}
+
+let numList = new DoublyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+
+numList.printList();
+console.log(numList.at(0).data)
+console.log(numList.at(2).data)
+console.log(numList.at(12).data)
+
+
+双方向リストの反転
+前回、片方向リストで行った逆向き表示を双方向リストでも行っていきます。双方向リストでは、前のノードのポインタを持っているので、リストを逆方向にアクセスすることができます。今回は、ただ逆側から出力する printInReverse 関数と、リストを逆向きに変更する reverse の 2 つの関数を作成します。
+
+reverse 関数は複数のポインタが必要になるので、紙に一度書いて理解を深めてみましょう。
+
+class Node{
+    constructor(data){
+        this.data = data;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class DoublyLinkedList{
+    constructor(arr){
+        if(arr.length <= 0){
+            this.head =  new Node(null);
+            this.tail = this.head;
+            return;
+        }
+
+        this.head = new Node(arr[0]);
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i]);
+            currentNode.next.prev = currentNode;
+            currentNode = currentNode.next;
+        }
+
+        this.tail = currentNode;
+    }
+
+    at(index){
+        let iterator = this.head;
+        for(let i = 0; i < index; i++){
+            iterator = iterator.next;
+            if(iterator == null) return null;
+        }
+
+        return iterator;
+    }
+
+    reverse(){
+        let reverse = this.tail;
+        let iterator = this.tail.prev;
+
+        let currentNode = reverse;
+        while(iterator != null){
+            currentNode.next = iterator;
+
+            iterator = iterator.prev;
+            if(iterator != null) iterator.next = null;
+
+            currentNode.next.prev = currentNode;
+            currentNode = currentNode.next;
+        }
+
+        this.tail = currentNode;
+        this.head = reverse;
+        this.head.prev = null;
+    }
+    
+    printInReverse(){
+        let iterator = this.tail;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.prev;
+        }
+        console.log(str)
+    }
+
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }
+        console.log(str)
+    }
+}
+
+let numList = new DoublyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+
+numList.printList();
+numList.printInReverse();
+
+numList.printList();
+numList.reverse();
+numList.printList();
+numList.printInReverse();
+
+
+双方向リスト - 挿入
+双方向リストへの挿入も片方向リストの時と同様に、O(1) で実行することができます。
+
+しかし、双方向リストの場合、リストの最後（末尾）にデータを追加するときは、リストの最後の部分がどこであるかを知っている必要があります。これは、双方向リストが各要素（ノード）の前後の位置情報を持っているためです。そのため、新しいデータを最後に追加した場合、その位置情報（末尾）を更新しなければなりません。
+
+class Node{
+    constructor(data){
+        this.data = data;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class DoublyLinkedList{
+    constructor(arr){
+        if(arr.length <= 0){
+            this.head =  new Node(null);
+            this.tail = this.head;
+            return;
+        }
+
+        this.head = new Node(arr[0]);
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i]);
+            currentNode.next.prev = currentNode;
+            currentNode = currentNode.next;
+        }
+
+        this.tail = currentNode;
+    }
+
+    at(index){
+        let iterator = this.head;
+        for(let i = 0; i < index; i++){
+            iterator = iterator.next;
+            if(iterator == null) return null;
+        }
+
+        return iterator;
+    }
+
+    // リストの先頭に新しいノードを追加します。
+    preappend(newNode){
+        // 元の先頭ノードの前を新しいノードに設定します。
+        this.head.prev = newNode;
+        // 新しいノードの次を元の先頭ノードに設定します。
+        newNode.next = this.head;
+        // 新しいノードが先頭になるので、前はnullに設定します。
+        newNode.prev = null;
+        // 新しいノードをリストの新しい先頭として設定します。
+        this.head = newNode;
+    }
+
+    // リストの最後に新しいノードを追加します。
+    append(newNode){
+        // 元の末尾ノードの次に新しいノードを設定します。
+        this.tail.next = newNode;
+        // 新しいノードが末尾になるので、次はnullに設定します。
+        newNode.next = null;
+        // 新しいノードの前を元の末尾ノードに設定します。
+        newNode.prev = this.tail;
+        // 新しいノードをリストの新しい末尾として設定します。
+        this.tail = newNode;
+    }
+
+    // 指定されたノードの次に新しいノードを追加します。
+    addNextNode(node, newNode){
+        // 指定されたノードの次のノードを一時的に保存します。
+        let tempNode = node.next;
+        // 指定されたノードの次に新しいノードを設定します。
+        node.next = newNode;
+        // 新しいノードの次に一時的に保存していたノード（元の次のノード）を設定します。
+        newNode.next = tempNode;
+        // 新しいノードの前に指定されたノードを設定します。
+        newNode.prev = node;
+
+        // もし指定されたノードが末尾だった場合、新しいノードが新たな末尾になるので、末尾を更新します。
+        if(node === this.tail) this.tail = newNode;
+        else 
+        // 指定されたノードが末尾でない場合、一時的に保存していたノード（元の次のノード）の前に新しいノードを設定します。
+        tempNode.prev = newNode;
+    }
+
+    reverse() {
+        let currentNode = this.head;
+        [this.head, this.tail] = [this.tail, this.head];
+
+        while (currentNode !== null) {
+            let prevNode = currentNode.prev;
+            currentNode.prev = currentNode.next;
+            currentNode.next = prevNode;
+            currentNode = currentNode.prev;
+        }
+    }
+
+    printInReverse(){
+        let iterator = this.tail;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.prev;
+        }
+        console.log(str)
+    }
+
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }
+        console.log(str)
+    }
+}
+
+let numList = new DoublyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+numList.printList();
+
+// 45をpreappend
+numList.preappend(new Node(45));
+console.log(numList.head.data);
+numList.printList();
+
+// 71をappend
+numList.append(new Node(71));
+console.log(numList.tail.data);
+numList.printList();
+console.log("");
+
+// ノードの後に新しいノードを追加
+numList.addNextNode(numList.at(3), new Node(4));
+numList.printList();
+console.log(numList.tail.data);
+
+numList.addNextNode(numList.at(15), new Node(679));
+numList.printList();
+console.log(numList.tail.data);
+
+numList.printInReverse();
+
+
+双方向リスト - 削除
+双方向リストが片方向リストより優れている点は、前のポインタを持っているため、ノードの削除を O(1) で実行することができるところです。例えば、「A」「B」「C」というノードが順番に並んでいるとき、もし「B」を取り除きたいなら、その前後の「A」と「C」をつなげるだけで OK です。これができるのは、「B」が「A」と「C」の両方に連結しているからです。
+
+リストの先頭を削除する pop メソッドと共に具体例を見てみましょう。
+class Node{
+    constructor(data){
+        this.data = data;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class DoublyLinkedList{
+    constructor(arr){
+        if(arr.length <= 0){
+            this.head =  new Node(null);
+            this.tail = this.head;
+            return;
+        }
+
+        this.head = new Node(arr[0]);
+        let currentNode = this.head;
+        for(let i = 1; i < arr.length; i++){
+            currentNode.next = new Node(arr[i]);
+            currentNode.next.prev = currentNode;
+            currentNode = currentNode.next;
+        }
+
+        this.tail = currentNode;
+    }
+
+    at(index){
+        let iterator = this.head;
+        for(let i = 0; i < index; i++){
+            iterator = iterator.next;
+            if(iterator == null) return null;
+        }
+
+        return iterator;
+    }
+
+    // リストの先頭から要素をpopします。実行時間はO(1)です。
+    popFront() {
+        this.head = this.head.next;  // 先頭ノードを次のノードに更新します。
+        this.head.prev = null;  // 新しい先頭ノードのprev（前のノード）をnullに設定します。
+    }
+
+    // リストの末尾から要素をpopします。実行時間はO(1)です。
+    pop() {
+        this.tail = this.tail.prev;  // 末尾ノードを前のノードに更新します。
+        this.tail.next = null;  // 新しい末尾ノードのnext（次のノード）をnullに設定します。
+    }
+
+    // 与えられたノードをO(1)で削除します。
+    deleteNode(node) {
+        // 削除したいノードが末尾ノードの場合、pop()メソッドを呼び出して削除します。
+        if (node === this.tail) return this.pop();
+        // 削除したいノードが先頭ノードの場合、popFront()メソッドを呼び出して削除します。
+        if (node === this.head) return this.popFront();
+
+        // どちらでもない場合（つまり、削除したいノードがリストの中間にある場合）は、
+        // 削除したいノードの前のノードと次のノードを直接つなぎます。
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
+    preappend(newNode){
+        this.head.prev = newNode;
+        newNode.next = this.head;
+        newNode.prev = null;
+        this.head = newNode;
+    }
+
+    append(newNode){
+        this.tail.next = newNode;
+        newNode.next = null;
+        newNode.prev = this.tail;
+        this.tail = newNode;
+    }
+
+    addNextNode(node, newNode){
+        let tempNode = node.next;
+        node.next = newNode;
+        newNode.next = tempNode;
+        newNode.prev = node;
+
+        if(node === this.tail) this.tail = newNode;
+        else tempNode.prev = newNode;
+    }
+
+    reverse(){
+        let reverse = this.tail;
+        let iterator = this.tail.prev;
+
+        let currentNode = reverse;
+        while(iterator != null){
+            currentNode.next = iterator;
+
+            iterator = iterator.prev;
+            if(iterator != null) iterator.next = null;
+
+            currentNode.next.prev = currentNode;
+            currentNode = currentNode.next;
+        }
+
+        this.tail = currentNode;
+        this.head = reverse;
+        this.head.prev = null;
+    }
+
+    printInReverse(){
+        let iterator = this.tail;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.prev;
+        }
+        console.log(str)
+    }
+
+    printList(){
+        let iterator = this.head;
+        let str = "";
+        while(iterator != null){
+            str += iterator.data + " ";
+            iterator = iterator.next;
+        }
+        console.log(str)
+    }
+}
+
+let numList = new DoublyLinkedList([35,23,546,67,86,234,56,767,34,1,98,78,555]);
+
+// pop
+numList.printList();
+
+numList.popFront();
+numList.pop();
+
+numList.printList();
+numList.printInReverse();
+
+// 要素を削除します
+console.log("Deleting in O(1)");
+numList.printList();
+
+numList.deleteNode(numList.at(3));
+numList.deleteNode(numList.at(9));
+numList.deleteNode(numList.at(0));
+
+numList.printList();
+numList.printInReverse();
+
+連結リストの仕組みや時間計算量を少しでも理解できたでしょうか？
+
+
+通常リストを使う場合では、配列の方が汎用性が高く、高速で処理を行うことができます。しかし、グラフ内のポインタなど、連結リストの特性を本質的に使用するアルゴリズム等、連結リストの使用が好まれるケースもあります。
+
+
+これ以外では、ランダムにデータにアクセスして要素を入れ替えるような時ではなく、多くの要素の挿入や削除を行う場合には連結リストを使うのが一般的です。それは連結リストが動的で、リストを容易に縮小、拡大することができるからです。
+
+
+では、連結リストが効果的に実装されているデータ構造、「キュー」と「スタック」について学習していきましょう。

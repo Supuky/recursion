@@ -1,0 +1,489 @@
+キュー（Queue）は、FIFO（First-In-First-Out）の原則に従った線形データ構造です。これは「最初に入ったものが最初に出てくる」という規則を意味します。たとえば、スーパーマーケットのレジの行列を想像してみてください。最初に並んだ人（データ）が最初にレジで会計（削除）されます。これがキューの動作原理です。
+
+
+キューは配列や連結リストなどのデータ構造を用いて実装することが可能で、受け取ったデータをその順番に処理することが求められる多くの場面で利用されます。
+
+
+キューには主に次のような操作があります。
+
+Enqueue（エンキュー）: キューの末尾に新しい要素を追加します。
+Dequeue（デキュー）: キューの先頭の要素を削除し、その要素を返します。
+
+// ノードクラスを作成します。このノードはキューの各要素を表現します。
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+// キュークラスを作成します。このキューはFIFO（先入れ先出し）の原則に従います。
+class Queue {
+    constructor() {
+        // キューの先頭を表すノード
+        this.head = null;
+        // キューの末尾を表すノード
+        this.tail = null;
+    }
+
+    // キューの先頭を参照します。キューが空の場合はnullを返します。
+    peekFront() {
+        if (this.head === null) return null;
+        return this.head.data;
+    }
+
+    // キューの末尾を参照します。キューが空の場合は先頭を参照します。
+    peekBack() {
+        if (this.tail === null) return this.peekFront();
+        return this.tail.data;
+    }
+
+    enqueue(data) {
+        // 新たなデータをキューの末尾に追加します。
+        if (this.head === null) {
+        // キューが空の場合は新たにノードを作成し、先頭と末尾に設定します。
+        this.head = new Node(data);
+        this.tail = this.head;
+        } else {
+        // そうでなければ新たなノードを末尾に追加します。
+        this.tail.next = new Node(data);
+        this.tail = this.tail.next;
+        }
+    }
+
+    dequeue() {
+        // キューの先頭のデータを取り出します。キューが空の場合はnullを返します。
+        if (this.head === null) return null;
+
+        // 先頭のノードを一時的に保存します。
+        const temp = this.head;
+        // 先頭を次のノードに移します。
+        this.head = this.head.next;
+        // もしキューが空になった場合は、末尾もnullに設定します。
+        if (this.head === null) this.tail = null;
+
+        // 先頭から取り出したデータを返します。
+        return temp.data;
+    }
+}
+
+// キューを作成します。
+const q = new Queue();
+// 最初にキューの先頭と末尾を表示します。
+console.log(q.peekFront());
+console.log(q.peekBack());
+
+// 4をキューに追加し、先頭と末尾を表示します。
+q.enqueue(4);
+console.log(q.peekFront());
+console.log(q.peekBack());
+
+// 50をキューに追加し、先頭と末尾を表示します。
+q.enqueue(50);
+console.log(q.peekFront());
+console.log(q.peekBack());
+
+// 64をキューに追加し、先頭と末尾を表示します。
+q.enqueue(64);
+console.log(q.peekFront());
+console.log(q.peekBack());
+
+// キューからデータを取り出し、取り出したデータを表示します。
+console.log("dequeued: " + q.dequeue());
+// キューの先頭と末尾を表示します。
+console.log(q.peekFront());
+console.log(q.peekBack());
+
+両端キュー(1)
+両端キュー（deque, double-ended queue）は、その名の通り、両端からデータを追加や削除できるようになったキューです。一般的なキューでは、データは一端からしか追加できず、もう一方の端からしか削除できません。
+
+
+一方で、両端キューでは、両端からデータを追加や削除することができるようになっています。両端キューはデック（deque）と呼ばれることもあります。スタックとキューの両方の操作を行う必要がある場合に便利なデータ構造になっています。
+
+
+両端キューの機能は以下になります。
+
+EnqueueFront: リストの先頭に要素を挿入する関数
+EnqueueBack:リストの末尾に要素を挿入する関数
+DequeueFront: リストの先頭にある要素を削除して返す関数
+DequeueBack: リストの末尾にある要素を削除して返す関数
+DequeueBack を片方向リストで実装すると時間計算量が O(n) になってしまいます。末尾に prev を使って効率よくアクセスするために、双方向リストを使用します。
+
+// Nodeクラスを定義します。
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+// Dequeクラスを定義します。
+class Deque {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+    }
+
+    // デックの先頭の要素を覗き見るメソッド
+    peekFront() {
+        if (this.head === null) return null;
+        return this.head.data;
+    }
+
+    // デックの末尾の要素を覗き見るメソッド
+    peekBack() {
+        if (this.tail === null) return null;
+        return this.tail.data;
+    }
+
+    // デックの先頭に要素を追加するメソッド
+    enqueueFront(data) {
+        // デックが空の場合
+        if (this.head === null) {
+            // 新しいノードを作成し、それを先頭（または末尾）に設定します
+            this.head = new Node(data);
+            this.tail = this.head;
+        }
+        // デックに既に要素がある場合
+        else {
+            // 新しいノードを作成し、それを現在の先頭ノードの前に設定します
+            this.head.prev = new Node(data);
+            // 新しく作成したノードの次のノードを現在の先頭ノードに設定します
+            this.head.prev.next = this.head;
+            // 先頭ノードを新しく作成したノードに更新します
+            this.head = this.head.prev;
+        }
+    }
+
+    // デックの末尾に要素を追加するメソッド
+    enqueueBack(data) {
+        // デックが空の場合
+        if (this.head === null) {
+            // 新しいノードを作成し、それを先頭（または末尾）に設定します
+            this.head = new Node(data);
+            this.tail = this.head;
+        }
+        // デックに既に要素がある場合
+        else {
+            // 新しいノードを作成し、それを現在の末尾ノードの次に設定します
+            this.tail.next = new Node(data);
+            // 新しく作成したノードの前のノードを現在の末尾ノードに設定します
+            this.tail.next.prev = this.tail;
+            // 末尾ノードを新しく作成したノードに更新します
+            this.tail = this.tail.next;
+        }
+    }
+
+    // デックの先頭の要素を削除し返すメソッド
+    dequeueFront() {
+        if (this.head === null) { // デックが空の場合
+            return null; // 削除できる要素がないので、nullを返します
+        }
+
+        // 現在の先頭ノードを一時的に保存します
+        let temp = this.head;
+        // 先頭ノードを次のノードに更新します
+        this.head = this.head.next;
+        if (this.head === null) { // デックが空になった場合
+            this.tail = null; // 末尾ノードもnullに設定します
+        } else { // デックにまだ要素がある場合
+            // 新しい先頭ノードの前のノードは存在しないので、nullに設定します
+            this.head.prev = null;
+        }
+
+        // 削除したノードのデータを返します
+        return temp.data;
+    }
+
+    // デックの末尾の要素を削除し返すメソッド
+    dequeueBack() {
+        // デックが空の場合
+        if (this.tail === null) {
+            // 削除できる要素がないので、nullを返します
+            return null;
+        }
+
+        // 現在の末尾ノードを一時的に保存します
+        let temp = this.tail;
+        // 末尾ノードを前のノードに更新します
+        this.tail = this.tail.prev;
+        // デックが空になった場合
+        if (this.tail === null) {
+            // 先頭ノードもnullに設定します
+            this.head = null;
+        } else {
+            // 新しい末尾ノードの次のノードは存在しないので、nullに設定します
+            this.tail.next = null;
+        }
+
+        // 削除したノードのデータを返します
+        return temp.data;
+    }
+}
+
+// 以下は、このDequeクラスの使用例です。
+let q = new Deque();
+
+// 4をデックの末尾に追加
+q.enqueueBack(4);
+// 50をデックの末尾に追加
+q.enqueueBack(50);
+
+console.log(q.peekFront()); // 4
+console.log(q.peekBack()); // 50
+
+// 36をデックの先頭に追加
+q.enqueueFront(36);
+// 96をデックの先頭に追加
+q.enqueueFront(96);
+
+console.log(q.peekFront()); // 96
+console.log(q.peekBack()); // 50
+console.log(q.dequeueBack()); // 50
+console.log(q.dequeueBack()); // 4
+console.log(q.peekFront()); // 96
+console.log(q.peekBack()); // 36
+
+// 20をデックの先頭に追加
+q.enqueueFront(20);
+
+console.log(q.dequeueBack()); // 36
+
+両端キュー(2)
+それでは両端キューを使って、配列の中から最大値を検索しましょう。手順は以下のようになります。
+
+配列の中の数字を順に見ていきます。
+見た数字が今まで見つけた最大値よりも大きければ、その数字を新たな最大値とします。そしてその新たな最大値を両端キューの一番前（先頭）に入れます。
+逆に見た数字が今まで見つけた最大値よりも小さければ、その数字を両端キューの一番後ろ（最後）に入れます。
+この操作を配列の最初から最後まで繰り返します。最終的には、両端キューの一番前（先頭）には配列の中で最も大きな数字が残ることになります。
+
+
+また、この手順が全体的にかかる時間は O(n) となります。これは、n を配列の要素数とした場合、要素全てを 1 回ずつ確認するため、最悪の場合でも要素数に比例した時間しかかからないという意味です。具体的には、各要素を見て、その場で最大値かどうかを確認し、両端キューに追加する操作はそれほど時間がかからないため、全体の時間は配列の要素数にほぼ等しくなるというわけです。
+
+class Node{
+    constructor(data){
+        this.data = data;
+        this.next = null;
+        this.prev = null;
+    }
+}
+
+class Deque{
+    constructor(){
+        this.head = null;
+        this.tail = null;
+    }
+
+    peekFront(){
+        if(this.head == null) return null;
+        return this.head.data;
+    }
+
+    peekBack(){
+        if(this.tail == null) return null;
+        return this.tail.data;
+    }
+
+    enqueueFront(data){
+        if(this.head == null){
+            this.head = new Node(data);
+            this.tail = this.head;
+        }
+        else {
+            this.head.prev = new Node(data);
+            this.head.prev.next = this.head;
+            this.head = this.head.prev;
+        }
+    }
+
+    enqueueBack(data){
+        if(this.head == null){
+            this.head = new Node(data);
+            this.tail = this.head;
+        }
+        else{
+            this.tail.next = new Node(data);
+            this.tail.next.prev = this.tail;
+            this.tail = this.tail.next;
+        }
+    }
+
+    dequeueFront(){
+        if(this.head == null) return null;
+
+        let temp = this.head;
+        this.head = this.head.next;
+        if(this.head == null) this.tail = null;
+        else this.head.prev = null;
+        return temp.data;
+    }
+
+    dequeueBack(){
+        if(this.tail == null) return null;
+
+        let temp = this.tail;
+        this.tail = this.tail.prev;
+        if(this.tail == null) this.head = null;
+        else this.tail.next = null;
+        return temp.data;
+    }
+}
+
+function getMax(arr){
+    let deque = new Deque();
+    // 最初の要素を両端キューの最初に追加します。
+    deque.enqueueFront(arr[0]);
+
+    // 最大値は両端キューの先頭へ、その他の値は末尾へ向かいます。
+    for(let i = 1; i < arr.length; i++){
+        if(arr[i] > deque.peekFront()) deque.enqueueFront(arr[i]);
+        else deque.enqueueBack(arr[i]);
+    }
+
+    return deque.peekFront();
+}
+
+console.log(getMax([34,35,64,34,10,2,14,5,353,23,35,63,23]));//353
+
+
+
+両端キュー(3)
+与えられた配列と整数 k に対して、サイズ k の連続する部分配列の中で最大の値を見つける問題を解いてみましょう。例えば、入力として arr = [1, 2, 3, 1, 4, 5, 2, 3, 6], k = 3 を考えてみます。
+
+
+この場合、サイズ 3 の連続する部分配列の最大値を求める必要があります。具体的な処理手順は次の通りです。
+
+最初の 3 つの要素で構成される部分配列 [1, 2, 3] を考えます。最大値は 3 です。
+次に、配列を 1 つずつスライドさせて次の部分配列 [2, 3, 1] を取得します。最大値は 3 です。
+同様に、次の部分配列 [3, 1, 4] の最大値は 4 です。
+これを繰り返していき、部分配列 [1, 4, 5] の最大値は 5、[4, 5, 2] の最大値は 5、[5, 2, 3] の最大値は 5、[2, 3, 6] の最大値は 6 となります。
+このようにして、サイズ k の連続する部分配列の最大値を求めることができます。
+
+
+ただし、問題を解くために Brute-Force（強引）な方法を使うと、連続する部分配列をすべて反復して調べる必要があります。そのため、時間計算量が O(n⋅k) になります。
+
+
+しかし、両端キューを使うことで、この問題を効率的に O(n) で解決することができます。このアルゴリズムでは、スライディングウィンドウと呼ばれる手法が使用されます。スライディングウィンドウはよく使われるアルゴリズムの一つなので、しっかりと理解しておくと良いでしょう。
+
+スライディングウィンドウ
+サイズ 4 のウィンドウを配列の中で 1 つずつ右側にずらし、ウィンドウの中での最大値を求めることを考えてみましょう。
+
+このウィンドウ内で最大の値を見つけるのが目的です。そのため、新しくウィンドウに入ってきた値が、既存の値より大きい場合、その既存の値はもう二度と最大値になることはありません。なぜなら、ウィンドウが右に移動するため、新しく入ってきた大きな値がウィンドウから出る前に、既存の小さな値がウィンドウから出てしまうからです。
+
+
+したがって、新しくウィンドウに入ってきた値が既存の値より大きい場合、その小さい値はウィンドウから取り除きます。そうすることで、ウィンドウの左端には常に現在のウィンドウ内で最大の値が存在します。
+
+これを利用すると、ウィンドウを右にスライドさせるごとに、ウィンドウ内の最大値をリストに追加していくことができます。
+
+
+ではこのアルゴリズムを両端キューを用いて実装してください。最初に配列の先頭から k 個分の要素を両端キューに入れ、その後、右にスライドさせながら新しい値を追加し、不要な値を削除していきます。そしてウィンドウが右に移動するたびに、両端キューの先頭（左端）にある値（現在のウィンドウで最大の値）を新たなリストに追加します。これを最後まで繰り返します。
+
+class Node{
+    constructor(data){
+        this.data = data;
+        this.next = null;
+        this.prev = null;
+    }
+}
+
+class Deque{
+    constructor(){
+        this.head = null;
+        this.tail = null;
+    }
+
+    peekFront(){
+        if(this.head == null) return null;
+        return this.head.data;
+    }
+
+    peekBack(){
+        if(this.tail == null) return null;
+        return this.tail.data;
+    }
+
+    enqueueFront(data){
+        if(this.head == null){
+            this.head = new Node(data);
+            this.tail = this.head;
+        }
+
+        let node = new Node(data);
+        this.head.prev = node;
+        node.next = this.head;
+        this.head = node;
+    }
+
+    enqueueBack(data){
+        if(this.head == null){
+            this.head = new Node(data);
+            this.tail = this.head;
+        }
+        else{
+            let node = new Node(data);
+            this.tail.next = node;
+            node.prev = this.tail;
+            this.tail = node;
+        }
+    }
+
+    dequeueFront(){
+        if(this.head == null) return null;
+
+        let temp = this.head;
+        this.head = this.head.next;
+        if(this.head != null) this.head.prev = null;
+        else this.tail = null;
+        return temp.data;
+    }
+
+    dequeueBack(){
+        if(this.tail == null) return null;
+
+        let temp = this.tail;
+        this.tail = this.tail.prev;
+
+        //update the tail
+        if(this.tail != null) this.tail.next = null;
+        else this.head = null;
+        return temp.data;
+    }
+}
+
+function getMaxWindows(arr, k){
+    if(k > arr.length) return [];
+
+    let results = [];
+    let deque = new Deque();
+
+    // dequeの初期化
+    for(let i = 0; i < k; i++){
+        // 新しい値と既存の値を比較して、新しい値以下は全て削除するので、dequeの末尾は新しい値より大きい値になります。
+        // dequeの先頭は最大値です。(新しい値より大きいので削除されないから。)
+        while(deque.peekBack() !== null && arr[deque.peekBack()] <= arr[i]){
+            deque.dequeueBack();
+        }
+        deque.enqueueBack(i);
+    }
+    
+    for(let i = k; i < arr.length; i++){
+        // dequeの先頭は最大値
+        results.push(arr[deque.peekFront()]);
+
+        // ウィンドウ外にある要素は取り除きます。
+        while(deque.peekFront() !== null && deque.peekFront() <= i-k) deque.dequeueFront();
+        
+        // 現在の値とそれより小さい全てのdequeの値をチェック
+        while(deque.peekBack() !== null && arr[deque.peekBack()] <= arr[i]) deque.dequeueBack();
+        deque.enqueueBack(i);
+        // deque.printList();
+    }
+
+    // 最後のmax
+    results.push(arr[deque.peekFront()]);
+
+    return results;
+}
+
+console.log(getMaxWindows([34,35,64,34,10,2,14,5,353,23,35,63,23], 4)); //[64, 64, 64, 34, 14, 353, 353, 353, 353, 63]
