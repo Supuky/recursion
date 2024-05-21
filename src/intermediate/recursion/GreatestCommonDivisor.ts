@@ -25,6 +25,10 @@ function GCD(x: number, y: number): number{
   }
 }
 
+// 最小公倍数
+function lcm(a: number, b: number) {
+  return (a * b) / gcd(a, b);
+}
 
 // memo
 // n = 0 のとき、gcd(m,n) = m
