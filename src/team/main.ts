@@ -22,3 +22,25 @@ function isPalindrome(str: string) {
 console.log(isPalindrome("dog god"));
 console.log(isPalindrome("tag agt"));
 console.log(isPalindrome("pineapple apple"));
+
+function pair(array: number[], target: number) {
+  // {value: index}の形で作る
+  const hashmap: { [key: number]: number } = {};
+
+  // ハッシュマップ作成 
+  for(let i = 0; i < array.length; i++) {
+    const curr = array[i];
+    if(!hashmap[curr]) hashmap[curr] = i;
+  };
+
+  for(let i = 0; i < array.length; i++) {
+    // diff: targetから現在の値を引いた数
+    const diff = target - array[i]
+    // 現在のインデックスではない時とハッシュマップにdiffが存在する時
+    if(i !== hashmap[diff] && hashmap[diff]) {
+      return [array[i], array[hashmap[diff]]];
+    }
+  }
+}
+
+console.log(pair([2, 6, 8, 3, 5, 9], 10));
