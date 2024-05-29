@@ -44,3 +44,47 @@ function pair(array: number[], target: number) {
 }
 
 console.log(pair([2, 6, 8, 3, 5, 9], 10));
+
+function isBrackets(str: string) {
+  // スタック
+  let stack: string[] = [];
+  // ペアになるハッシュマップを作成
+  let bracketsMap: { [key: string]: string } = {
+    '(': ')',
+    '{': '}',
+    '[': ']'
+  };
+
+  for (let i = 0; i < str.length; i++) {
+    // "{", "}", "(", ")", "[", "]"の時のみスタックに追加
+    if(str[i] === "{" || str[i] === "}" || str[i] === "(" || str[i] === ")" || str[i] === "[" || str[i] === "]") {
+      // bracketsMapに存在する時スタックに追加
+      if (bracketsMap[str[i]]) {
+        stack.push(str[i]);
+      } else {
+        let last = stack.pop();
+        // 現在の文字とスタックの末尾が一致するか
+        if (!last || str[i] !== bracketsMap[last]) {
+          return false;
+        }
+      }
+    }
+  }
+
+  if (stack.length !== 0) {
+    return false;
+  }
+
+  return true;
+}
+
+console.log(isBrackets("ab(c)de"));
+console.log(isBrackets("ab(cd{ef[gh]i})j"));
+console.log(isBrackets("ab(cd(ef(gh[ij]))kl)m"));
+console.log(isBrackets("ab()cde"));
+console.log(isBrackets("abcde"));
+console.log(isBrackets("ab(cde"));
+console.log(isBrackets("ab(c{d]e)"));
+console.log(isBrackets("ab(c{d}e]"));
+console.log(isBrackets("ab(c{d)e}"));
+console.log(isBrackets("ab)c{d}e("));
